@@ -515,7 +515,30 @@ input[type="checkbox"] {
     transform: scale(1.03);
 }
 
+/* Стили для индикатора синхронизации */
+#syncStatus {
+    font-size: 14px;
+    margin-left: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: #f0f4f8;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+#syncStatus.saving {
+    color: #f39c12;
+    background: #fef9e7;
+}
+#syncStatus.saved {
+    color: #27ae60;
+    background: #eafaf1;
+}
+#syncStatus.error {
+    color: #e74c3c;
+    background: #fdedec;
+}
 </style>
+
 </head>
 
 <body>
@@ -523,6 +546,7 @@ input[type="checkbox"] {
 <div class="container">
 <div class="title-row">
 <h2>📚 Домашняя библиотека</h2>
+<span id="syncStatus" class="saved">Синхронизировано</span>
 <button class="history-btn" onclick="openHistory()">🕓 История изменений</button>
 </div>
 
@@ -580,11 +604,39 @@ input[type="checkbox"] {
 const API_URL = "https://script.google.com/macros/s/AKfycbyALTvJQJNtiPHVD0412yqehh5M6m_dBsH_rx_Qbl9rah8yOrNzA3evKaHqu50wX8bzmQ/exec";
 let DATA = [];
 
-async function load() {
-    const res = await fetch(API_URL);
-    DATA = await res.json();
+const syncStatus = document.getElementById('syncStatus');
 
-    applyFilters();
+function setSyncStatus(state) {
+    // Убираем все классы
+    syncStatus.classList.remove('saving', 'saved', 'error');
+    // Добавляем нужный
+    syncStatus.classList.add(state);
+
+    const texts = {
+        saving: 'Идёт синхронизация…',
+        saved: 'Синхронизировано',
+        error: 'Ошибка синхронизации'
+    };
+    syncStatus.textContent = texts[state] || texts.saved;
+
+    // Автосброс ошибки через 3 секунды
+    if (state === 'error') {
+        clearTimeout(window.syncErrorTimeout);
+        window.syncErrorTimeout = setTimeout(() => setSyncStatus('saved'), 3000);
+    }
+}
+
+async function load() {
+    setSyncStatus('saving');
+    try {
+        const res = await fetch(API_URL);
+        DATA = await res.json();
+        setSyncStatus('saved');
+        applyFilters();
+    } catch (err) {
+        setSyncStatus('error');
+        console.error('Load error:', err);
+    }
 }
 
 function groupByAuthor(data) {
@@ -657,15 +709,16 @@ async function add() {
     bookInput.value = "";
     applyFilters();
 
-    // Отправляем на сервер в фоне, потом синхронизируем реальные id
+    setSyncStatus('saving');
     try {
         await fetch(API_URL, {
             method: "POST",
             body: JSON.stringify({ action: "add", author, book })
         });
+        setSyncStatus('saved');
         load(); // обновляем id с сервера
     } catch (err) {
-        // При ошибке — откатываем
+        setSyncStatus('error');
         DATA = DATA.filter(x => x.id !== tempId);
         applyFilters();
         alert("Ошибка при добавлении");
@@ -678,13 +731,16 @@ async function remove(id) {
     DATA = DATA.filter(x => x.id !== id);
     applyFilters();
 
+    setSyncStatus('saving');
     try {
         await fetch(API_URL, {
             method: "POST",
             body: JSON.stringify({ action: "delete", id })
         });
+        setSyncStatus('saved');
         load(); // синхронизируем id (после удаления они сдвигаются)
     } catch (err) {
+        setSyncStatus('error');
         DATA = backup;
         applyFilters();
         alert("Ошибка при удалении");
@@ -802,12 +858,15 @@ async function saveEdit(id) {
     item.book = book;
     applyFilters();
 
+    setSyncStatus('saving');
     try {
         await fetch(API_URL, {
             method: "POST",
             body: JSON.stringify({ action: "update", id, author, book })
         });
+        setSyncStatus('saved');
     } catch (err) {
+        setSyncStatus('error');
         Object.assign(item, backup);
         applyFilters();
         alert("Ошибка при редактировании");
@@ -825,12 +884,15 @@ async function toggleRead(id, field, value) {
     item[field] = value;
     updateStats(DATA.slice(1));
 
+    setSyncStatus('saving');
     try {
         await fetch(API_URL, {
             method: "POST",
             body: JSON.stringify({ action: "toggle", id, field, value })
         });
+        setSyncStatus('saved');
     } catch (err) {
+        setSyncStatus('error');
         item[field] = backup;
         updateStats(DATA.slice(1));
         alert("Ошибка при изменении");
@@ -925,13 +987,16 @@ async function submitInlineAdd(author, formId) {
     tr.remove();
     applyFilters();
 
+    setSyncStatus('saving');
     try {
         await fetch(API_URL, {
             method: "POST",
             body: JSON.stringify({ action: "add", author, book })
         });
+        setSyncStatus('saved');
         load();
     } catch (err) {
+        setSyncStatus('error');
         DATA = DATA.filter(x => x.id !== tempId);
         applyFilters();
         alert("Ошибка при добавлении");
@@ -1034,12 +1099,15 @@ async function saveAnnotation(id) {
     refreshAnnotationIcon(id);
     closeBookDetails();
 
+    setSyncStatus('saving');
     try {
         await fetch(API_URL, {
             method: "POST",
             body: JSON.stringify({ action: "updateAnnotation", id, annotation })
         });
+        setSyncStatus('saved');
     } catch (err) {
+        setSyncStatus('error');
         item.annotation = backup;
         refreshAnnotationIcon(id);
         alert("Ошибка при сохранении аннотации");
