@@ -334,6 +334,186 @@ input[type="checkbox"] {
     box-shadow: 0 0 0 2px rgba(39,174,96,0.2);
 }
 
+/* Кнопка истории */
+.title-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.history-btn {
+    background: #34495e;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: opacity 0.15s, transform 0.1s;
+    white-space: nowrap;
+}
+
+.history-btn:hover {
+    opacity: 0.85;
+    transform: scale(1.03);
+}
+
+.history-btn:active {
+    transform: scale(0.97);
+}
+
+/* Модальное окно истории */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-box {
+    background: white;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 17px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #888;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+
+.modal-close:hover {
+    background: #f0f0f0;
+}
+
+.modal-body {
+    padding: 12px 20px 20px;
+    overflow-y: auto;
+}
+
+.history-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.history-time {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 2px;
+}
+
+.history-desc {
+    font-size: 14px;
+    color: #333;
+}
+
+.history-empty, .history-loading, .history-error {
+    text-align: center;
+    color: #888;
+    padding: 20px 0;
+}
+
+/* Кликабельное название книги */
+.book-title-link {
+    cursor: pointer;
+    transition: color 0.15s;
+}
+
+.book-title-link:hover {
+    color: #3498db;
+    text-decoration: underline;
+}
+
+/* Значок наличия аннотации рядом с названием книги */
+.annotation-icon {
+    display: inline-block;
+    margin-left: 6px;
+    font-size: 13px;
+    vertical-align: middle;
+    opacity: 0.75;
+    cursor: default;
+}
+
+/* Карточка книги в модалке */
+.book-author {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.book-annotation {
+    color: #444;
+    line-height: 1.5;
+    font-size: 14px;
+    white-space: pre-wrap;
+}
+
+.book-annotation-edit {
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.book-modal-actions {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.book-modal-actions button {
+    border: none;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: opacity 0.15s, transform 0.1s;
+}
+
+.book-modal-actions button:hover {
+    opacity: 0.85;
+    transform: scale(1.03);
+}
 
 </style>
 </head>
@@ -341,7 +521,30 @@ input[type="checkbox"] {
 <body>
 
 <div class="container">
+<div class="title-row">
 <h2>📚 Домашняя библиотека</h2>
+<button class="history-btn" onclick="openHistory()">🕓 История изменений</button>
+</div>
+
+<div id="historyModal" class="modal-overlay hidden">
+<div class="modal-box">
+<div class="modal-header">
+<h3>🕓 Последние изменения</h3>
+<button class="modal-close" onclick="closeHistory()">✖</button>
+</div>
+<div id="historyList" class="modal-body"></div>
+</div>
+</div>
+
+<div id="bookModal" class="modal-overlay hidden">
+<div class="modal-box">
+<div class="modal-header">
+<h3 id="bookModalTitle">📖 Книга</h3>
+<button class="modal-close" onclick="closeBookDetails()">✖</button>
+</div>
+<div id="bookModalBody" class="modal-body"></div>
+</div>
+</div>
 
 <div class="search">
 <input id="search" placeholder="Поиск..." oninput="filter()">
@@ -493,8 +696,13 @@ function buildBookRow(item, authorId) {
     tr.className = authorId;
     tr.dataset.id = item.id;
 
+    const hasAnnotation = item.annotation && item.annotation.trim();
+    const annotationIcon = hasAnnotation
+        ? `<span class="annotation-icon" title="Есть аннотация">📝</span>`
+        : "";
+
     tr.innerHTML = `
-    <td colspan="2" class="book-cell">${item.book}</td>
+    <td colspan="2" class="book-cell"><span class="book-title-link" onclick="openBookDetails(${item.id})">${item.book}</span>${annotationIcon}</td>
     <td>
         <input type="checkbox"
             ${item.igor ? "checked" : ""}
@@ -511,6 +719,32 @@ function buildBookRow(item, authorId) {
     </td>
     `;
     return tr;
+}
+
+// Точечно обновляет значок аннотации у конкретной строки, не перерисовывая
+// всю таблицу — чтобы значок появлялся/пропадал сразу после сохранения.
+function refreshAnnotationIcon(id) {
+    const tr = document.querySelector(`tr[data-id="${id}"]`);
+    if (!tr) return;
+
+    const item = DATA.find(x => x.id === id);
+    if (!item) return;
+
+    const titleLink = tr.querySelector(".book-title-link");
+    if (!titleLink) return; // строка сейчас в режиме редактирования — не трогаем
+
+    const hasAnnotation = item.annotation && item.annotation.trim();
+    let iconEl = tr.querySelector(".annotation-icon");
+
+    if (hasAnnotation && !iconEl) {
+        iconEl = document.createElement("span");
+        iconEl.className = "annotation-icon";
+        iconEl.title = "Есть аннотация";
+        iconEl.textContent = "📝";
+        titleLink.after(iconEl);
+    } else if (!hasAnnotation && iconEl) {
+        iconEl.remove();
+    }
 }
 
 function startEdit(id) {
@@ -703,6 +937,126 @@ async function submitInlineAdd(author, formId) {
         alert("Ошибка при добавлении");
     }
 }
+
+async function openHistory() {
+    const modal = document.getElementById("historyModal");
+    const list = document.getElementById("historyList");
+
+    modal.classList.remove("hidden");
+    list.innerHTML = `<div class="history-loading">Загрузка...</div>`;
+
+    try {
+        const res = await fetch(`${API_URL}?type=history`);
+        const history = await res.json();
+        renderHistory(history);
+    } catch (err) {
+        list.innerHTML = `<div class="history-error">Не удалось загрузить историю</div>`;
+    }
+}
+
+function closeHistory() {
+    document.getElementById("historyModal").classList.add("hidden");
+}
+
+function renderHistory(history) {
+    const list = document.getElementById("historyList");
+
+    if (!history || !history.length) {
+        list.innerHTML = `<div class="history-empty">Изменений пока нет</div>`;
+        return;
+    }
+
+    list.innerHTML = history.map(item => {
+        const date = new Date(item.time);
+        const formatted = date.toLocaleString("ru-RU", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+
+        return `
+            <div class="history-item">
+                <div class="history-time">${formatted}</div>
+                <div class="history-desc">${item.description}</div>
+            </div>
+        `;
+    }).join("");
+}
+
+function openBookDetails(id) {
+    const item = DATA.find(x => x.id === id);
+    if (!item) return;
+
+    document.getElementById("bookModalTitle").textContent = "📖 " + item.book;
+
+    const hasAnnotation = item.annotation && item.annotation.trim();
+    const annotationText = hasAnnotation
+        ? item.annotation
+        : "Аннотация не найдена. Можно добавить вручную.";
+
+    const body = document.getElementById("bookModalBody");
+    body.innerHTML = `
+        <div class="book-author">👤 ${item.author}</div>
+        <p id="bookAnnotationText" class="book-annotation">${annotationText}</p>
+        <textarea id="bookAnnotationEdit" class="inline-input book-annotation-edit hidden" rows="5">${item.annotation || ""}</textarea>
+        <div class="book-modal-actions">
+            <button class="edit" id="bookAnnotationEditBtn" onclick="startEditAnnotation()">✏️ Редактировать</button>
+            <button class="save hidden" id="bookAnnotationSaveBtn" onclick="saveAnnotation(${id})">💾 Сохранить</button>
+        </div>
+    `;
+
+    document.getElementById("bookModal").classList.remove("hidden");
+}
+
+function closeBookDetails() {
+    document.getElementById("bookModal").classList.add("hidden");
+}
+
+function startEditAnnotation() {
+    document.getElementById("bookAnnotationText").classList.add("hidden");
+    document.getElementById("bookAnnotationEdit").classList.remove("hidden");
+    document.getElementById("bookAnnotationEditBtn").classList.add("hidden");
+    document.getElementById("bookAnnotationSaveBtn").classList.remove("hidden");
+    document.getElementById("bookAnnotationEdit").focus();
+}
+
+async function saveAnnotation(id) {
+    const textarea = document.getElementById("bookAnnotationEdit");
+    const annotation = textarea.value.trim();
+
+    const item = DATA.find(x => x.id === id);
+    const backup = item.annotation;
+    item.annotation = annotation;
+
+    // Обновляем значок и закрываем модалку сразу, не дожидаясь ответа сервера
+    refreshAnnotationIcon(id);
+    closeBookDetails();
+
+    try {
+        await fetch(API_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "updateAnnotation", id, annotation })
+        });
+    } catch (err) {
+        item.annotation = backup;
+        refreshAnnotationIcon(id);
+        alert("Ошибка при сохранении аннотации");
+    }
+}
+
+// Закрытие по клику на фон и по Escape
+document.getElementById("bookModal").addEventListener("click", (e) => {
+    if (e.target.id === "bookModal") closeBookDetails();
+});
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        closeHistory();
+        closeBookDetails();
+    }
+});
 
 load();
 </script>
