@@ -5,12 +5,60 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Домашняя библиотека</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+:root {
+    --bg: #EAF6F3;
+    --bg-warm: #DCEEE8;
+    --surface: #FFFFFF;
+    --surface-2: #F1FAF8;
+    --ink: #24332F;
+    --ink-soft: #62807A;
+    --ink-faint: #A0BDB6;
+    --accent: #2FA98D;
+    --accent-soft: #8ED9C4;
+    --accent-deep: #1F8A72;
+    --accent-wash: #D3F1E6;
+    --info: #5B8FBF;
+    --info-wash: #E1EDF7;
+    --teal: #4FB3A7;
+    --teal-wash: #DFF4EE;
+    --rose: #CC8FA0;
+    --rose-wash: #F5E3E9;
+    --sage: #7FAE86;
+    --line: #D8ECE5;
+    --shadow: 0 10px 30px rgba(31, 94, 79, 0.12);
+    --shadow-soft: 0 4px 14px rgba(31, 94, 79, 0.08);
+    --radius-lg: 26px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+}
+
+* { box-sizing: border-box; }
+
 body {
-    font-family: "Segoe UI", sans-serif;
-    background: #FFF5EE;
+    font-family: "Nunito", "Segoe UI", sans-serif;
+    background: linear-gradient(180deg, var(--bg-warm) 0%, var(--bg) 55%, var(--bg) 100%);
+    background-attachment: fixed;
     margin: 20px;
+    color: var(--ink);
+}
+
+.bg-scene {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.bg-scene svg {
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 
 @media (max-width: 600px) {
@@ -23,10 +71,13 @@ thead th {
     position: sticky;
     top: 0;
     z-index: 5;
-    background: #2c3e50;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    background: var(--accent);
+    box-shadow: 0 2px 10px rgba(168, 93, 66, 0.25);
     white-space: normal;
     word-break: break-word;
+    font-family: "Nunito", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.02em;
 }
 
 .container {
@@ -36,14 +87,20 @@ thead th {
 
 h2 {
     text-align: center;
+    font-family: "Nunito", sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    margin: 6px 0;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
 
     table-layout: fixed; /* 🔥 ВАЖНО */
 }
@@ -54,8 +111,9 @@ table {
     overflow-y: auto;
     max-height: 75vh;
     -webkit-overflow-scrolling: touch;
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--line);
 }
 
 /* Скроллбар не перекрывает шапку */
@@ -71,12 +129,12 @@ table {
 }
 
 .table-wrapper::-webkit-scrollbar-thumb {
-    background: #b0bec5;
+    background: var(--accent-soft);
     border-radius: 8px;
 }
 
 .table-wrapper::-webkit-scrollbar-thumb:hover {
-    background: #90a4ae;
+    background: var(--accent);
 }
 
 .table-wrapper table {
@@ -87,7 +145,14 @@ table {
 
 /* # */
 th:nth-child(1), td:nth-child(1) {
-    width: 36px;
+    width: 44px;
+    padding-left: 6px;
+    padding-right: 12px;
+    color: var(--ink-faint);
+    font-weight: 600;
+    text-align: center;
+    overflow: visible;
+    text-overflow: clip;
 }
 
 /* Автор / Книга */
@@ -113,22 +178,31 @@ th:nth-child(4), td:nth-child(4) {
 
 /* Действия */
 th:nth-child(5), td:nth-child(5) {
-    width: 90px;
+    width: 108px;
+}
+
+th:nth-child(5) {
+    white-space: nowrap;
 }
 
 /* 👉 ВЕРТИКАЛЬНЫЕ ЛИНИИ */
 th, td {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    border-right: 1px solid #ddd;
+    padding: 11px 10px;
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
         overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+th {
+    border-right: 1px solid rgba(255,255,255,0.18);
+}
+
 td:nth-child(2), td.book-cell {
     white-space: normal;
     word-break: break-word;
+    text-align: left;
 }
 
 th:last-child, td:last-child {
@@ -136,29 +210,31 @@ th:last-child, td:last-child {
 }
 
 th {
-    background: #2c3e50;
-    color: white;
+    background: var(--accent);
+    color: #fff;
 }
 
 tr:hover {
-    background: #f9fbfc;
+    background: var(--surface-2);
 }
 
 /* группировка */
 .author-row {
-    background: #ecf0f1;
-    font-weight: bold;
+    background: var(--bg-warm);
+    font-family: "Nunito", sans-serif;
+    font-weight: 600;
+    color: #16261F;
     cursor: pointer;
     transition: background 0.15s;
 }
 
 .author-row:hover {
-    background: #e2e8ea;
+    background: var(--accent-wash);
 }
 
 .author-row td {
     background: inherit;
-    border-right: 1px solid #ecf0f1;
+    border-right: 1px solid rgba(168, 93, 66, 0.08);
     transition: background 0.15s;
 }
 
@@ -168,10 +244,10 @@ tr:hover {
 
 .actions button {
     margin-right: 3px;
-    padding: 5px 7px;
+    padding: 6px 9px;
     border: none;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     transition: opacity 0.15s, transform 0.1s;
     font-size: 14px;
 }
@@ -185,30 +261,33 @@ tr:hover {
     transform: scale(0.97);
 }
 
-.edit { background: #3498db; color: white; }
-.save { background: #27ae60; color: white; }
-.cancel-btn { background: #95a5a6; color: white; }
-.delete { background: #e74c3c; color: white; }
+.edit { background: var(--info-wash); color: #2E5478; }
+.save { background: var(--sage); color: white; }
+.cancel-btn { background: var(--bg-warm); color: var(--ink-soft); }
+.delete { background: var(--rose-wash); color: #8A3F52; }
 
 tr.editing td {
-    background: #f0f7ff;
+    background: var(--accent-wash);
 }
 
 .inline-input {
     width: 100%;
-    padding: 5px 8px;
-    border: 1px solid #3498db;
-    border-radius: 6px;
+    padding: 6px 10px;
+    border: 1.5px solid var(--accent-soft);
+    border-radius: var(--radius-sm);
     font-size: 14px;
     font-family: inherit;
     box-sizing: border-box;
     outline: none;
     white-space: normal;
     word-break: break-word;
+    background: var(--surface);
+    color: var(--ink);
 }
 
 .inline-input:focus {
-    box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(201,122,92,0.18);
 }
 
 .form, .search {
@@ -233,31 +312,39 @@ tr.editing td {
 }
 
 input {
-    padding: 8px 12px;
+    padding: 10px 14px;
     flex: 1;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm);
     transition: border-color 0.18s, box-shadow 0.18s;
     outline: none;
+    background: var(--surface);
+    color: var(--ink);
+    font-family: inherit;
+}
+
+input::placeholder {
+    color: var(--ink-faint);
 }
 
 input:focus {
-    border-color: #3498db;
-    box-shadow: 0 0 0 3px rgba(52,152,219,0.12);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(201,122,92,0.15);
 }
 
 button.add {
-    background: #27ae60;
+    background: var(--accent);
     color: white;
-    padding: 10px 18px;
+    padding: 10px 20px;
     border: none;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
+    font-weight: 700;
     transition: background 0.18s, transform 0.1s;
 }
 
 button.add:hover {
-    background: #229a55;
+    background: var(--accent-deep);
 }
 
 button.add:active {
@@ -266,13 +353,14 @@ button.add:active {
 
 #stats {
     margin-top: 20px;
-    padding: 14px 16px;
-    background: white;
-    border-radius: 14px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border-radius: var(--radius-md);
     text-align: center;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--line);
     font-size: 14px;
-    color: #555;
+    color: var(--ink-soft);
 }
 
 .read-stats {
@@ -284,30 +372,61 @@ button.add:active {
 }
 
 .read-badge {
-    background: #f4f6f8;
-    border: 1px solid #e0e4e8;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
     border-radius: 20px;
-    padding: 5px 16px;
+    padding: 6px 16px;
     font-size: 13px;
-    color: #444;
+    color: var(--ink);
 }
 
 input[type="checkbox"] {
-    width: 22px;
-    height: 22px;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    border: 1.5px solid var(--accent-soft);
+    background: var(--surface);
     cursor: pointer;
+    position: relative;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    vertical-align: middle;
+}
+
+input[type="checkbox"]:hover {
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+input[type="checkbox"]:checked {
+    background: var(--sage);
+    border-color: var(--sage);
+}
+
+input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    width: 6px;
+    height: 11px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .add-book-btn {
     margin-left: 10px;
-    padding: 3px 9px;
-    background: #27ae60;
-    color: white;
+    padding: 4px 11px;
+    background: var(--info-wash);
+    color: #2E5478;
     border: none;
-    border-radius: 7px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 13px;
-    font-weight: normal;
+    font-weight: 700;
+    font-family: "Nunito", sans-serif;
     transition: opacity 0.15s, transform 0.1s;
     vertical-align: middle;
 }
@@ -322,16 +441,16 @@ input[type="checkbox"] {
 }
 
 .inline-add-row td {
-    background: #f0fff4;
-    border-bottom: 2px solid #27ae60;
+    background: var(--teal-wash);
+    border-bottom: 2px solid var(--sage);
 }
 
 .inline-add-row .inline-input {
-    border-color: #27ae60;
+    border-color: var(--sage);
 }
 
 .inline-add-row .inline-input:focus {
-    box-shadow: 0 0 0 2px rgba(39,174,96,0.2);
+    box-shadow: 0 0 0 2px rgba(147,173,127,0.25);
 }
 
 /* Кнопка истории */
@@ -344,19 +463,21 @@ input[type="checkbox"] {
 }
 
 .history-btn {
-    background: #34495e;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 10px;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line);
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 13px;
-    transition: opacity 0.15s, transform 0.1s;
+    font-weight: 700;
+    font-family: "Nunito", sans-serif;
+    transition: opacity 0.15s, transform 0.1s, border-color 0.15s;
     white-space: nowrap;
 }
 
 .history-btn:hover {
-    opacity: 0.85;
+    border-color: var(--accent);
     transform: scale(1.03);
 }
 
@@ -368,7 +489,8 @@ input[type="checkbox"] {
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.45);
+    background: rgba(16, 41, 35, 0.35);
+    backdrop-filter: blur(2px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -381,27 +503,31 @@ input[type="checkbox"] {
 }
 
 .modal-box {
-    background: white;
-    border-radius: 16px;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
     width: 100%;
     max-width: 520px;
     max-height: 80vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    box-shadow: 0 20px 50px rgba(16,41,35,0.25);
+    border: 1px solid var(--line);
 }
 
 .modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 20px;
-    border-bottom: 1px solid #eee;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--line);
 }
 
 .modal-header h3 {
     margin: 0;
-    font-size: 17px;
+    font-family: "Nunito", sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--ink);
 }
 
 .modal-close {
@@ -409,24 +535,24 @@ input[type="checkbox"] {
     border: none;
     font-size: 16px;
     cursor: pointer;
-    color: #888;
+    color: var(--ink-soft);
     padding: 4px 8px;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     transition: background 0.15s;
 }
 
 .modal-close:hover {
-    background: #f0f0f0;
+    background: var(--surface-2);
 }
 
 .modal-body {
-    padding: 12px 20px 20px;
+    padding: 14px 22px 22px;
     overflow-y: auto;
 }
 
 .history-item {
-    padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
 }
 
 .history-item:last-child {
@@ -435,29 +561,31 @@ input[type="checkbox"] {
 
 .history-time {
     font-size: 12px;
-    color: #999;
+    color: var(--ink-faint);
     margin-bottom: 2px;
 }
 
 .history-desc {
     font-size: 14px;
-    color: #333;
+    color: var(--ink);
 }
 
 .history-empty, .history-loading, .history-error {
     text-align: center;
-    color: #888;
+    color: var(--ink-soft);
     padding: 20px 0;
 }
 
 /* Кликабельное название книги */
 .book-title-link {
     cursor: pointer;
+    color: #16261F;
+    font-weight: 600;
     transition: color 0.15s;
 }
 
 .book-title-link:hover {
-    color: #3498db;
+    color: var(--accent-deep);
     text-decoration: underline;
 }
 
@@ -473,14 +601,15 @@ input[type="checkbox"] {
 
 /* Карточка книги в модалке */
 .book-author {
-    font-weight: bold;
-    color: #2c3e50;
+    font-family: "Nunito", sans-serif;
+    font-weight: 600;
+    color: var(--accent-deep);
     margin-bottom: 10px;
 }
 
 .book-annotation {
-    color: #444;
-    line-height: 1.5;
+    color: var(--ink);
+    line-height: 1.6;
     font-size: 14px;
     white-space: pre-wrap;
 }
@@ -495,7 +624,7 @@ input[type="checkbox"] {
 }
 
 .book-modal-actions {
-    margin-top: 14px;
+    margin-top: 16px;
     display: flex;
     gap: 8px;
     justify-content: flex-end;
@@ -503,10 +632,12 @@ input[type="checkbox"] {
 
 .book-modal-actions button {
     border: none;
-    padding: 7px 14px;
-    border-radius: 8px;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 13px;
+    font-weight: 700;
+    font-family: "Nunito", sans-serif;
     transition: opacity 0.15s, transform 0.1s;
 }
 
@@ -517,31 +648,66 @@ input[type="checkbox"] {
 
 /* Стили для индикатора синхронизации */
 #syncStatus {
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 700;
     margin-left: 12px;
-    padding: 4px 10px;
+    padding: 5px 12px;
     border-radius: 20px;
-    background: #f0f4f8;
+    background: var(--surface-2);
+    color: var(--ink-soft);
     transition: all 0.2s;
     white-space: nowrap;
 }
 #syncStatus.saving {
-    color: #f39c12;
-    background: #fef9e7;
+    color: #B08430;
+    background: #FBF1D9;
 }
 #syncStatus.saved {
-    color: #27ae60;
-    background: #eafaf1;
+    color: #4E7A65;
+    background: var(--teal-wash);
 }
 #syncStatus.error {
-    color: #e74c3c;
-    background: #fdedec;
+    color: #A34E52;
+    background: var(--rose-wash);
 }
 </style>
 
 </head>
 
 <body>
+
+<div class="bg-scene" aria-hidden="true">
+<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="hillBack" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#E3F4F0"/>
+            <stop offset="100%" stop-color="#C3E6DE"/>
+        </linearGradient>
+        <linearGradient id="hillMid" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#B0DED2"/>
+            <stop offset="100%" stop-color="#84C9B8"/>
+        </linearGradient>
+        <linearGradient id="hillFront" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#79C2AF"/>
+            <stop offset="100%" stop-color="#4FA690"/>
+        </linearGradient>
+    </defs>
+
+    <circle cx="1310" cy="170" r="95" fill="#DFF2EC" opacity="0.55"/>
+    <circle cx="1310" cy="170" r="62" fill="#C9E9E0" opacity="0.5"/>
+
+    <path d="M0,560 C200,480 400,480 600,530 C800,580 1000,460 1200,510 C1350,545 1500,480 1600,510 L1600,900 L0,900 Z" fill="url(#hillBack)" opacity="0.6"/>
+
+    <path d="M0,650 C220,560 420,560 620,610 C820,660 1020,540 1220,600 C1380,645 1500,580 1600,610 L1600,900 L0,900 Z" fill="url(#hillMid)" opacity="0.65"/>
+
+    <path d="M0,740 C220,660 440,660 660,710 C860,750 1080,640 1300,700 C1440,735 1520,690 1600,700 L1600,900 L0,900 Z" fill="url(#hillFront)" opacity="0.7"/>
+
+    <g opacity="0.35" fill="none" stroke="#8FB5AC" stroke-width="4" stroke-linecap="round">
+        <path d="M260,140 q18,-16 36,0 q18,-16 36,0"/>
+        <path d="M980,90 q16,-14 32,0 q16,-14 32,0"/>
+    </g>
+</svg>
+</div>
 
 <div class="container">
 <div class="title-row">
@@ -575,9 +741,10 @@ input[type="checkbox"] {
 </div>
 
 <div class="form">
-<input id="author" placeholder="Автор">
-<input id="book" placeholder="Книга">
-<button class="add" onclick="add()">Добавить</button>
+    <input id="author" placeholder="Автор">
+    <datalist id="authorSuggestions"></datalist>
+    <input id="book" placeholder="Книга">
+    <button class="add" onclick="add()">Добавить</button>
 </div>
 
 
@@ -607,9 +774,7 @@ let DATA = [];
 const syncStatus = document.getElementById('syncStatus');
 
 function setSyncStatus(state) {
-    // Убираем все классы
     syncStatus.classList.remove('saving', 'saved', 'error');
-    // Добавляем нужный
     syncStatus.classList.add(state);
 
     const texts = {
@@ -619,18 +784,63 @@ function setSyncStatus(state) {
     };
     syncStatus.textContent = texts[state] || texts.saved;
 
-    // Автосброс ошибки через 3 секунды
     if (state === 'error') {
         clearTimeout(window.syncErrorTimeout);
         window.syncErrorTimeout = setTimeout(() => setSyncStatus('saved'), 3000);
     }
 }
 
+// ===== УПРАВЛЕНИЕ ПОДСКАЗКАМИ =====
+function updateAuthorSuggestions() {
+    const authors = new Set();
+    for (let i = 1; i < DATA.length; i++) {
+        const item = DATA[i];
+        if (item && item.author) {
+            authors.add(item.author);
+        }
+    }
+    const datalist = document.getElementById('authorSuggestions');
+    datalist.innerHTML = '';
+    for (const author of authors) {
+        const option = document.createElement('option');
+        option.value = author;
+        datalist.appendChild(option);
+    }
+}
+
+// Настройка поведения поля "Автор"
+const authorInput = document.getElementById('author');
+const bookInput = document.getElementById('book');
+
+// Убираем list по умолчанию, чтобы при фокусе не показывать всё сразу
+authorInput.removeAttribute('list');
+
+authorInput.addEventListener('focus', function() {
+    // Если поле не пустое – показываем список, иначе скрываем
+    if (this.value.trim() !== '') {
+        this.setAttribute('list', 'authorSuggestions');
+    } else {
+        this.removeAttribute('list');
+    }
+});
+
+authorInput.addEventListener('input', function() {
+    const val = this.value.trim();
+    if (val.length >= 1) {
+        this.setAttribute('list', 'authorSuggestions');
+    } else {
+        this.removeAttribute('list');
+    }
+});
+
+// ===== ОСНОВНЫЕ ФУНКЦИИ =====
+
 async function load() {
     setSyncStatus('saving');
     try {
         const res = await fetch(API_URL);
         DATA = await res.json();
+        updateAuthorSuggestions();
         setSyncStatus('saved');
         applyFilters();
     } catch (err) {
@@ -658,7 +868,6 @@ function render(data) {
     for (const author in grouped) {
         const authorId = "author_" + index;
 
-        // строка автора
         const trAuthor = document.createElement("tr");
         trAuthor.className = "author-row " + authorId;
         trAuthor.dataset.group = authorId;
@@ -671,7 +880,6 @@ function render(data) {
         `;
         tbody.appendChild(trAuthor);
 
-        // книги автора
         grouped[author].forEach(item => {
             tbody.appendChild(buildBookRow(item, authorId));
         });
@@ -682,14 +890,12 @@ function render(data) {
 let activeAuthor = null;
 let currentSearch = "";
 
-
 function toggle(authorName) {
     if (activeAuthor === authorName) {
-        activeAuthor = null; // сброс
+        activeAuthor = null;
     } else {
         activeAuthor = authorName;
     }
-
     applyFilters();
 }
 
@@ -702,10 +908,12 @@ async function add() {
         return;
     }
 
-    // Оптимистично добавляем локально
-    const tempId = Date.now(); // временный id
+    const tempId = Date.now();
     DATA.push({ id: tempId, author, book, igor: false, ira: false });
+    updateAuthorSuggestions();
+    // Очищаем поля и убираем list у автора
     authorInput.value = "";
+    authorInput.removeAttribute('list');
     bookInput.value = "";
     applyFilters();
 
@@ -716,19 +924,24 @@ async function add() {
             body: JSON.stringify({ action: "add", author, book })
         });
         setSyncStatus('saved');
-        load(); // обновляем id с сервера
+        load();
     } catch (err) {
         setSyncStatus('error');
         DATA = DATA.filter(x => x.id !== tempId);
+        updateAuthorSuggestions();
         applyFilters();
         alert("Ошибка при добавлении");
     }
 }
 
 async function remove(id) {
-    // Оптимистично удаляем локально
+    const item = DATA.find(x => x.id === id);
+    const bookName = item ? item.book : "эту книгу";
+    if (!confirm(`Удалить «${bookName}»?`)) return;
+
     const backup = DATA.slice();
     DATA = DATA.filter(x => x.id !== id);
+    updateAuthorSuggestions();
     applyFilters();
 
     setSyncStatus('saving');
@@ -738,10 +951,11 @@ async function remove(id) {
             body: JSON.stringify({ action: "delete", id })
         });
         setSyncStatus('saved');
-        load(); // синхронизируем id (после удаления они сдвигаются)
+        load();
     } catch (err) {
         setSyncStatus('error');
         DATA = backup;
+        updateAuthorSuggestions();
         applyFilters();
         alert("Ошибка при удалении");
     }
@@ -773,12 +987,11 @@ function buildBookRow(item, authorId) {
         <button class="edit" onclick="startEdit(${item.id})">✏️</button>
         <button class="delete" onclick="remove(${item.id})">🗑</button>
     </td>
+
     `;
     return tr;
 }
 
-// Точечно обновляет значок аннотации у конкретной строки, не перерисовывая
-// всю таблицу — чтобы значок появлялся/пропадал сразу после сохранения.
 function refreshAnnotationIcon(id) {
     const tr = document.querySelector(`tr[data-id="${id}"]`);
     if (!tr) return;
@@ -787,7 +1000,7 @@ function refreshAnnotationIcon(id) {
     if (!item) return;
 
     const titleLink = tr.querySelector(".book-title-link");
-    if (!titleLink) return; // строка сейчас в режиме редактирования — не трогаем
+    if (!titleLink) return;
 
     const hasAnnotation = item.annotation && item.annotation.trim();
     let iconEl = tr.querySelector(".annotation-icon");
@@ -808,7 +1021,6 @@ function startEdit(id) {
     const tr = document.querySelector(`tr[data-id="${id}"]`);
     if (!tr) return;
 
-    // Find the author row above to get current author value
     let authorRow = tr.previousElementSibling;
     while (authorRow && !authorRow.classList.contains("author-row")) {
         authorRow = authorRow.previousElementSibling;
@@ -856,6 +1068,7 @@ async function saveEdit(id) {
     const backup = { ...item };
     item.author = author;
     item.book = book;
+    updateAuthorSuggestions();
     applyFilters();
 
     setSyncStatus('saving');
@@ -868,6 +1081,7 @@ async function saveEdit(id) {
     } catch (err) {
         setSyncStatus('error');
         Object.assign(item, backup);
+        updateAuthorSuggestions();
         applyFilters();
         alert("Ошибка при редактировании");
     }
@@ -878,7 +1092,6 @@ async function edit(id) {
 }
 
 async function toggleRead(id, field, value) {
-    // Оптимистично обновляем локально
     const item = DATA.find(x => x.id === id);
     const backup = item[field];
     item[field] = value;
@@ -901,14 +1114,12 @@ async function toggleRead(id, field, value) {
 
 function filter() {
     currentSearch = document.getElementById("search").value.toLowerCase();
-
     applyFilters();
 }
 
 function applyFilters() {
     let data = DATA.slice(1);
 
-    // если выбран автор → показываем ВСЕ его книги (игнорируем поиск)
     if (activeAuthor) {
         data = data.filter(item => item.author === activeAuthor);
     } else if (currentSearch) {
@@ -922,10 +1133,8 @@ function applyFilters() {
 
 function updateStats(data) {
     const booksCount = data.length;
-
     const authors = new Set(data.map(item => item.author));
     const authorsCount = authors.size;
-
     const igorRead = data.filter(item => item.igor).length;
     const iraRead  = data.filter(item => item.ira).length;
 
@@ -937,11 +1146,7 @@ function updateStats(data) {
         `</div>`;
 }
 
-const authorInput = document.getElementById("author");
-const bookInput = document.getElementById("book");
-
 function addBookToAuthor(author, btn) {
-    // Если форма уже открыта для этого автора — закрываем
     const authorRow = btn.closest("tr");
     const existingForm = authorRow.nextElementSibling;
     if (existingForm && existingForm.classList.contains("inline-add-row")) {
@@ -949,7 +1154,6 @@ function addBookToAuthor(author, btn) {
         return;
     }
 
-    // Убираем другие открытые формы
     document.querySelectorAll(".inline-add-row").forEach(r => r.remove());
 
     const formId = "inline-add-" + Date.now();
@@ -984,6 +1188,7 @@ async function submitInlineAdd(author, formId) {
 
     const tempId = Date.now();
     DATA.push({ id: tempId, author, book, igor: false, ira: false });
+    updateAuthorSuggestions();
     tr.remove();
     applyFilters();
 
@@ -998,6 +1203,7 @@ async function submitInlineAdd(author, formId) {
     } catch (err) {
         setSyncStatus('error');
         DATA = DATA.filter(x => x.id !== tempId);
+        updateAuthorSuggestions();
         applyFilters();
         alert("Ошибка при добавлении");
     }
@@ -1095,7 +1301,6 @@ async function saveAnnotation(id) {
     const backup = item.annotation;
     item.annotation = annotation;
 
-    // Обновляем значок и закрываем модалку сразу, не дожидаясь ответа сервера
     refreshAnnotationIcon(id);
     closeBookDetails();
 
@@ -1114,7 +1319,6 @@ async function saveAnnotation(id) {
     }
 }
 
-// Закрытие по клику на фон и по Escape
 document.getElementById("bookModal").addEventListener("click", (e) => {
     if (e.target.id === "bookModal") closeBookDetails();
 });
