@@ -1,1337 +1,1451 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Домашняя библиотека</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-:root {
-    --bg: #EAF6F3;
-    --bg-warm: #DCEEE8;
-    --surface: #FFFFFF;
-    --surface-2: #F1FAF8;
-    --ink: #24332F;
-    --ink-soft: #62807A;
-    --ink-faint: #A0BDB6;
-    --accent: #2FA98D;
-    --accent-soft: #8ED9C4;
-    --accent-deep: #1F8A72;
-    --accent-wash: #D3F1E6;
-    --info: #5B8FBF;
-    --info-wash: #E1EDF7;
-    --teal: #4FB3A7;
-    --teal-wash: #DFF4EE;
-    --rose: #CC8FA0;
-    --rose-wash: #F5E3E9;
-    --sage: #7FAE86;
-    --line: #D8ECE5;
-    --shadow: 0 10px 30px rgba(31, 94, 79, 0.12);
-    --shadow-soft: 0 4px 14px rgba(31, 94, 79, 0.08);
-    --radius-lg: 26px;
-    --radius-md: 16px;
-    --radius-sm: 12px;
-}
-
-* { box-sizing: border-box; }
-
-body {
-    font-family: "Nunito", "Segoe UI", sans-serif;
-    background: linear-gradient(180deg, var(--bg-warm) 0%, var(--bg) 55%, var(--bg) 100%);
-    background-attachment: fixed;
-    margin: 20px;
-    color: var(--ink);
-}
-
-.bg-scene {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-.bg-scene svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
-@media (max-width: 600px) {
-    body {
-        margin: 10px;
-    }
-}
-
-thead th {
-    position: sticky;
-    top: 0;
-    z-index: 5;
-    background: var(--accent);
-    box-shadow: 0 2px 10px rgba(168, 93, 66, 0.25);
-    white-space: normal;
-    word-break: break-word;
-    font-family: "Nunito", sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-}
-
-.container {
-    max-width: 1000px;
-    margin: auto;
-}
-
-h2 {
-    text-align: center;
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
-    font-size: 28px;
-    letter-spacing: 0.01em;
-    color: var(--ink);
-    margin: 6px 0;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
-
-    table-layout: fixed; /* 🔥 ВАЖНО */
-}
-
-.table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    overflow-y: auto;
-    max-height: 75vh;
-    -webkit-overflow-scrolling: touch;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
-    border: 1px solid var(--line);
-}
-
-/* Скроллбар не перекрывает шапку */
-.table-wrapper::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-.table-wrapper::-webkit-scrollbar-track {
-    background: transparent;
-    margin-top: 45px; /* отступ = высота шапки */
-    border-radius: 8px;
-}
-
-.table-wrapper::-webkit-scrollbar-thumb {
-    background: var(--accent-soft);
-    border-radius: 8px;
-}
-
-.table-wrapper::-webkit-scrollbar-thumb:hover {
-    background: var(--accent);
-}
-
-.table-wrapper table {
-    box-shadow: none;
-    border-radius: 0;
-    min-width: 420px;
-}
-
-/* # */
-th:nth-child(1), td:nth-child(1) {
-    width: 44px;
-    padding-left: 6px;
-    padding-right: 12px;
-    color: var(--ink-faint);
-    font-weight: 600;
-    text-align: center;
-    overflow: visible;
-    text-overflow: clip;
-}
-
-/* Автор / Книга */
-th:nth-child(2), td:nth-child(2) {
-    width: auto;
-}
-
-/* Игорь */
-th:nth-child(3), td:nth-child(3) {
-    width: 62px;
-    text-align: center;
-    vertical-align: middle;
-    padding: 10px 0;
-}
-
-/* Ира */
-th:nth-child(4), td:nth-child(4) {
-    width: 62px;
-    text-align: center;
-    vertical-align: middle;
-    padding: 10px 0;
-}
-
-/* Действия */
-th:nth-child(5), td:nth-child(5) {
-    width: 108px;
-}
-
-th:nth-child(5) {
-    white-space: nowrap;
-}
-
-/* 👉 ВЕРТИКАЛЬНЫЕ ЛИНИИ */
-th, td {
-    padding: 11px 10px;
-    border-bottom: 1px solid var(--line);
-    border-right: 1px solid var(--line);
-        overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-th {
-    border-right: 1px solid rgba(255,255,255,0.18);
-}
-
-td:nth-child(2), td.book-cell {
-    white-space: normal;
-    word-break: break-word;
-    text-align: left;
-}
-
-th:last-child, td:last-child {
-    border-right: none;
-}
-
-th {
-    background: var(--accent);
-    color: #fff;
-}
-
-tr:hover {
-    background: var(--surface-2);
-}
-
-/* группировка */
-.author-row {
-    background: var(--bg-warm);
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
-    color: #16261F;
-    cursor: pointer;
-    transition: background 0.15s;
-}
-
-.author-row:hover {
-    background: var(--accent-wash);
-}
-
-.author-row td {
-    background: inherit;
-    border-right: 1px solid rgba(168, 93, 66, 0.08);
-    transition: background 0.15s;
-}
-
-.hidden {
-    display: none;
-}
-
-.actions button {
-    margin-right: 3px;
-    padding: 6px 9px;
-    border: none;
-    cursor: pointer;
-    border-radius: var(--radius-sm);
-    transition: opacity 0.15s, transform 0.1s;
-    font-size: 14px;
-}
-
-.actions button:hover {
-    opacity: 0.82;
-    transform: scale(1.05);
-}
-
-.actions button:active {
-    transform: scale(0.97);
-}
-
-.edit { background: var(--info-wash); color: #2E5478; }
-.save { background: var(--sage); color: white; }
-.cancel-btn { background: var(--bg-warm); color: var(--ink-soft); }
-.delete { background: var(--rose-wash); color: #8A3F52; }
-
-tr.editing td {
-    background: var(--accent-wash);
-}
-
-.inline-input {
-    width: 100%;
-    padding: 6px 10px;
-    border: 1.5px solid var(--accent-soft);
-    border-radius: var(--radius-sm);
-    font-size: 14px;
-    font-family: inherit;
-    box-sizing: border-box;
-    outline: none;
-    white-space: normal;
-    word-break: break-word;
-    background: var(--surface);
-    color: var(--ink);
-}
-
-.inline-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(201,122,92,0.18);
-}
-
-.form, .search {
-    margin-top: 15px;
-    margin-bottom: 15px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.form input {
-    min-width: 120px;
-}
-
-@media (max-width: 600px) {
-    .form {
-        flex-direction: column;
-    }
-    .form button.add {
-        width: 100%;
-    }
-}
-
-input {
-    padding: 10px 14px;
-    flex: 1;
-    border: 1.5px solid var(--line);
-    border-radius: var(--radius-sm);
-    transition: border-color 0.18s, box-shadow 0.18s;
-    outline: none;
-    background: var(--surface);
-    color: var(--ink);
-    font-family: inherit;
-}
-
-input::placeholder {
-    color: var(--ink-faint);
-}
-
-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(201,122,92,0.15);
-}
-
-button.add {
-    background: var(--accent);
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-weight: 700;
-    transition: background 0.18s, transform 0.1s;
-}
-
-button.add:hover {
-    background: var(--accent-deep);
-}
-
-button.add:active {
-    transform: scale(0.97);
-}
-
-#stats {
-    margin-top: 20px;
-    padding: 16px 18px;
-    background: var(--surface);
-    border-radius: var(--radius-md);
-    text-align: center;
-    box-shadow: var(--shadow-soft);
-    border: 1px solid var(--line);
-    font-size: 14px;
-    color: var(--ink-soft);
-}
-
-.read-stats {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-}
-
-.read-badge {
-    background: var(--surface-2);
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    padding: 6px 16px;
-    font-size: 13px;
-    color: var(--ink);
-}
-
-input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 8px;
-    border: 1.5px solid var(--accent-soft);
-    background: var(--surface);
-    cursor: pointer;
-    position: relative;
-    transition: background 0.15s, border-color 0.15s, transform 0.1s;
-    vertical-align: middle;
-}
-
-input[type="checkbox"]:hover {
-    border-color: var(--accent);
-    transform: scale(1.05);
-}
-
-input[type="checkbox"]:checked {
-    background: var(--sage);
-    border-color: var(--sage);
-}
-
-input[type="checkbox"]:checked::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 46%;
-    width: 6px;
-    height: 11px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.add-book-btn {
-    margin-left: 10px;
-    padding: 4px 11px;
-    background: var(--info-wash);
-    color: #2E5478;
-    border: none;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 700;
-    font-family: "Nunito", sans-serif;
-    transition: opacity 0.15s, transform 0.1s;
-    vertical-align: middle;
-}
-
-.add-book-btn:hover {
-    opacity: 0.85;
-    transform: scale(1.05);
-}
-
-.add-book-btn:active {
-    transform: scale(0.97);
-}
-
-.inline-add-row td {
-    background: var(--teal-wash);
-    border-bottom: 2px solid var(--sage);
-}
-
-.inline-add-row .inline-input {
-    border-color: var(--sage);
-}
-
-.inline-add-row .inline-input:focus {
-    box-shadow: 0 0 0 2px rgba(147,173,127,0.25);
-}
-
-/* Кнопка истории */
-.title-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.history-btn {
-    background: var(--surface);
-    color: var(--ink);
-    border: 1.5px solid var(--line);
-    padding: 8px 16px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 700;
-    font-family: "Nunito", sans-serif;
-    transition: opacity 0.15s, transform 0.1s, border-color 0.15s;
-    white-space: nowrap;
-}
-
-.history-btn:hover {
-    border-color: var(--accent);
-    transform: scale(1.03);
-}
-
-.history-btn:active {
-    transform: scale(0.97);
-}
-
-/* Модальное окно истории */
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(16, 41, 35, 0.35);
-    backdrop-filter: blur(2px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    padding: 20px;
-}
-
-.modal-overlay.hidden {
-    display: none;
-}
-
-.modal-box {
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    width: 100%;
-    max-width: 520px;
-    max-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 20px 50px rgba(16,41,35,0.25);
-    border: 1px solid var(--line);
-}
-
-.modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 22px;
-    border-bottom: 1px solid var(--line);
-}
-
-.modal-header h3 {
-    margin: 0;
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
-    font-size: 18px;
-    color: var(--ink);
-}
-
-.modal-close {
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    color: var(--ink-soft);
-    padding: 4px 8px;
-    border-radius: var(--radius-sm);
-    transition: background 0.15s;
-}
-
-.modal-close:hover {
-    background: var(--surface-2);
-}
-
-.modal-body {
-    padding: 14px 22px 22px;
-    overflow-y: auto;
-}
-
-.history-item {
-    padding: 12px 0;
-    border-bottom: 1px solid var(--line);
-}
-
-.history-item:last-child {
-    border-bottom: none;
-}
-
-.history-time {
-    font-size: 12px;
-    color: var(--ink-faint);
-    margin-bottom: 2px;
-}
-
-.history-desc {
-    font-size: 14px;
-    color: var(--ink);
-}
-
-.history-empty, .history-loading, .history-error {
-    text-align: center;
-    color: var(--ink-soft);
-    padding: 20px 0;
-}
-
-/* Кликабельное название книги */
-.book-title-link {
-    cursor: pointer;
-    color: #16261F;
-    font-weight: 600;
-    transition: color 0.15s;
-}
-
-.book-title-link:hover {
-    color: var(--accent-deep);
-    text-decoration: underline;
-}
-
-/* Значок наличия аннотации рядом с названием книги */
-.annotation-icon {
-    display: inline-block;
-    margin-left: 6px;
-    font-size: 13px;
-    vertical-align: middle;
-    opacity: 0.75;
-    cursor: default;
-}
-
-/* Карточка книги в модалке */
-.book-author {
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
-    color: var(--accent-deep);
-    margin-bottom: 10px;
-}
-
-.book-annotation {
-    color: var(--ink);
-    line-height: 1.6;
-    font-size: 14px;
-    white-space: pre-wrap;
-}
-
-.book-annotation-edit {
-    width: 100%;
-    box-sizing: border-box;
-    resize: vertical;
-    font-family: inherit;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.book-modal-actions {
-    margin-top: 16px;
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-}
-
-.book-modal-actions button {
-    border: none;
-    padding: 8px 16px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 700;
-    font-family: "Nunito", sans-serif;
-    transition: opacity 0.15s, transform 0.1s;
-}
-
-.book-modal-actions button:hover {
-    opacity: 0.85;
-    transform: scale(1.03);
-}
-
-/* Стили для индикатора синхронизации */
-#syncStatus {
-    font-size: 13px;
-    font-weight: 700;
-    margin-left: 12px;
-    padding: 5px 12px;
-    border-radius: 20px;
-    background: var(--surface-2);
-    color: var(--ink-soft);
-    transition: all 0.2s;
-    white-space: nowrap;
-}
-#syncStatus.saving {
-    color: #B08430;
-    background: #FBF1D9;
-}
-#syncStatus.saved {
-    color: #4E7A65;
-    background: var(--teal-wash);
-}
-#syncStatus.error {
-    color: #A34E52;
-    background: var(--rose-wash);
-}
-</style>
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Домашняя библиотека</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ===== VARIABLES ===== */
+        :root {
+            --bg: #EAF6F3;
+            --bg-warm: #DCEEE8;
+            --surface: #FFFFFF;
+            --surface-2: #F1FAF8;
+            --ink: #24332F;
+            --ink-soft: #62807A;
+            --ink-faint: #A0BDB6;
+            --accent: #2FA98D;
+            --accent-soft: #8ED9C4;
+            --accent-deep: #1F8A72;
+            --accent-wash: #D3F1E6;
+            --info: #5B8FBF;
+            --info-wash: #E1EDF7;
+            --teal: #4FB3A7;
+            --teal-wash: #DFF4EE;
+            --rose: #CC8FA0;
+            --rose-wash: #F5E3E9;
+            --sage: #7FAE86;
+            --line: #D8ECE5;
+            --shadow: 0 10px 30px rgba(31, 94, 79, 0.12);
+            --shadow-soft: 0 4px 14px rgba(31, 94, 79, 0.08);
+            --radius-lg: 26px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Nunito", "Segoe UI", sans-serif;
+            background: linear-gradient(180deg, var(--bg-warm) 0%, var(--bg) 55%, var(--bg) 100%);
+            background-attachment: fixed;
+            margin: 20px;
+            color: var(--ink);
+            min-height: 100vh;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                margin: 10px;
+            }
+        }
+
+        /* ===== BACKGROUND SCENE ===== */
+        .bg-scene {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-scene svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* ===== TABLE ===== */
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: var(--accent);
+            box-shadow: 0 2px 10px rgba(168, 93, 66, 0.25);
+            white-space: normal;
+            word-break: break-word;
+            font-family: "Nunito", sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h2 {
+            text-align: center;
+            font-family: "Nunito", sans-serif;
+            font-weight: 600;
+            font-size: 28px;
+            letter-spacing: 0.01em;
+            color: var(--ink);
+            margin: 6px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            table-layout: fixed;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 75vh;
+            -webkit-overflow-scrolling: touch;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--line);
+        }
+
+        .table-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-track {
+            background: transparent;
+            margin-top: 45px;
+            border-radius: 8px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: var(--accent-soft);
+            border-radius: 8px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        .table-wrapper table {
+            box-shadow: none;
+            border-radius: 0;
+            min-width: 420px;
+        }
+
+        /* column widths */
+        th:nth-child(1),
+        td:nth-child(1) {
+            width: 44px;
+            padding-left: 6px;
+            padding-right: 12px;
+            color: var(--ink-faint);
+            font-weight: 600;
+            text-align: center;
+            overflow: visible;
+            text-overflow: clip;
+        }
+
+        th:nth-child(2),
+        td:nth-child(2) {
+            width: auto;
+        }
+
+        th:nth-child(3),
+        td:nth-child(3) {
+            width: 62px;
+            text-align: center;
+            vertical-align: middle;
+            padding: 10px 0;
+        }
+
+        th:nth-child(4),
+        td:nth-child(4) {
+            width: 62px;
+            text-align: center;
+            vertical-align: middle;
+            padding: 10px 0;
+        }
+
+        th:nth-child(5),
+        td:nth-child(5) {
+            width: 108px;
+        }
+
+        th:nth-child(5) {
+            white-space: nowrap;
+        }
+
+        th,
+        td {
+            padding: 11px 10px;
+            border-bottom: 1px solid var(--line);
+            border-right: 1px solid var(--line);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        th {
+            border-right: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        td:nth-child(2),
+        td.book-cell {
+            white-space: normal;
+            word-break: break-word;
+            text-align: left;
+        }
+
+        th:last-child,
+        td:last-child {
+            border-right: none;
+        }
+
+        th {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        tr:hover {
+            background: var(--surface-2);
+        }
+
+        /* ===== AUTHOR ROW ===== */
+        .author-row {
+            background: var(--bg-warm);
+            font-family: "Nunito", sans-serif;
+            font-weight: 600;
+            color: #16261F;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .author-row:hover {
+            background: var(--accent-wash);
+        }
+
+        .author-row td {
+            background: inherit;
+            border-right: 1px solid rgba(168, 93, 66, 0.08);
+            transition: background 0.15s;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* ===== BUTTONS ===== */
+        .actions button {
+            margin-right: 3px;
+            padding: 6px 9px;
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: opacity 0.15s, transform 0.1s;
+            font-size: 14px;
+        }
+
+        .actions button:hover {
+            opacity: 0.82;
+            transform: scale(1.05);
+        }
+
+        .actions button:active {
+            transform: scale(0.97);
+        }
+
+        .edit {
+            background: var(--info-wash);
+            color: #2E5478;
+        }
+        .save {
+            background: var(--sage);
+            color: white;
+        }
+        .cancel-btn {
+            background: var(--bg-warm);
+            color: var(--ink-soft);
+        }
+        .delete {
+            background: var(--rose-wash);
+            color: #8A3F52;
+        }
+
+        tr.editing td {
+            background: var(--accent-wash);
+        }
+
+        .inline-input {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1.5px solid var(--accent-soft);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: inherit;
+            box-sizing: border-box;
+            outline: none;
+            white-space: normal;
+            word-break: break-word;
+            background: var(--surface);
+            color: var(--ink);
+        }
+
+        .inline-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(201, 122, 92, 0.18);
+        }
+
+        /* ===== FORMS ===== */
+        .form,
+        .search {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .form input {
+            min-width: 120px;
+        }
+
+        @media (max-width: 600px) {
+            .form {
+                flex-direction: column;
+            }
+            .form button.add {
+                width: 100%;
+            }
+        }
+
+        input {
+            padding: 10px 14px;
+            flex: 1;
+            border: 1.5px solid var(--line);
+            border-radius: var(--radius-sm);
+            transition: border-color 0.18s, box-shadow 0.18s;
+            outline: none;
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+        }
+
+        input::placeholder {
+            color: var(--ink-faint);
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(201, 122, 92, 0.15);
+        }
+
+        button.add {
+            background: var(--accent);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 700;
+            transition: background 0.18s, transform 0.1s;
+        }
+
+        button.add:hover {
+            background: var(--accent-deep);
+        }
+
+        button.add:active {
+            transform: scale(0.97);
+        }
+
+        /* ===== STATS ===== */
+        #stats {
+            margin-top: 20px;
+            padding: 16px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--line);
+            font-size: 14px;
+            color: var(--ink-soft);
+        }
+
+        .read-stats {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .read-badge {
+            background: var(--surface-2);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 13px;
+            color: var(--ink);
+        }
+
+        /* ===== CHECKBOX ===== */
+        input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 8px;
+            border: 1.5px solid var(--accent-soft);
+            background: var(--surface);
+            cursor: pointer;
+            position: relative;
+            transition: background 0.15s, border-color 0.15s, transform 0.1s;
+            vertical-align: middle;
+        }
+
+        input[type="checkbox"]:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        input[type="checkbox"]:checked {
+            background: var(--sage);
+            border-color: var(--sage);
+        }
+
+        input[type="checkbox"]:checked::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 46%;
+            width: 6px;
+            height: 11px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        /* ===== INLINE ADD ===== */
+        .add-book-btn {
+            margin-left: 10px;
+            padding: 4px 11px;
+            background: var(--info-wash);
+            color: #2E5478;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: "Nunito", sans-serif;
+            transition: opacity 0.15s, transform 0.1s;
+            vertical-align: middle;
+        }
+
+        .add-book-btn:hover {
+            opacity: 0.85;
+            transform: scale(1.05);
+        }
+
+        .add-book-btn:active {
+            transform: scale(0.97);
+        }
+
+        .inline-add-row td {
+            background: var(--teal-wash);
+            border-bottom: 2px solid var(--sage);
+        }
+
+        .inline-add-row .inline-input {
+            border-color: var(--sage);
+        }
+
+        .inline-add-row .inline-input:focus {
+            box-shadow: 0 0 0 2px rgba(147, 173, 127, 0.25);
+        }
+
+        /* ===== TITLE ROW ===== */
+        .title-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .history-btn {
+            background: var(--surface);
+            color: var(--ink);
+            border: 1.5px solid var(--line);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: "Nunito", sans-serif;
+            transition: opacity 0.15s, transform 0.1s, border-color 0.15s;
+            white-space: nowrap;
+        }
+
+        .history-btn:hover {
+            border-color: var(--accent);
+            transform: scale(1.03);
+        }
+
+        .history-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* ===== MODALS ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(16, 41, 35, 0.35);
+            backdrop-filter: blur(2px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+        .modal-box {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 520px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(16, 41, 35, 0.25);
+            border: 1px solid var(--line);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-family: "Nunito", sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--ink);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: var(--ink-soft);
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            transition: background 0.15s;
+        }
+
+        .modal-close:hover {
+            background: var(--surface-2);
+        }
+
+        .modal-body {
+            padding: 14px 22px 22px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-time {
+            font-size: 12px;
+            color: var(--ink-faint);
+            margin-bottom: 2px;
+        }
+
+        .history-desc {
+            font-size: 14px;
+            color: var(--ink);
+        }
+
+        .history-empty,
+        .history-loading,
+        .history-error {
+            text-align: center;
+            color: var(--ink-soft);
+            padding: 20px 0;
+        }
+
+        .book-title-link {
+            cursor: pointer;
+            color: #16261F;
+            font-weight: 600;
+            transition: color 0.15s;
+        }
+
+        .book-title-link:hover {
+            color: var(--accent-deep);
+            text-decoration: underline;
+        }
+
+        .annotation-icon {
+            display: inline-block;
+            margin-left: 6px;
+            font-size: 13px;
+            vertical-align: middle;
+            opacity: 0.75;
+            cursor: default;
+        }
+
+        .book-author {
+            font-family: "Nunito", sans-serif;
+            font-weight: 600;
+            color: var(--accent-deep);
+            margin-bottom: 10px;
+        }
+
+        .book-annotation {
+            color: var(--ink);
+            line-height: 1.6;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+
+        .book-annotation-edit {
+            width: 100%;
+            box-sizing: border-box;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .book-modal-actions {
+            margin-top: 16px;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .book-modal-actions button {
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: "Nunito", sans-serif;
+            transition: opacity 0.15s, transform 0.1s;
+        }
+
+        .book-modal-actions button:hover {
+            opacity: 0.85;
+            transform: scale(1.03);
+        }
+
+        /* ===== SYNC STATUS ===== */
+        #syncStatus {
+            font-size: 13px;
+            font-weight: 700;
+            margin-left: 12px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: var(--surface-2);
+            color: var(--ink-soft);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        #syncStatus.saving {
+            color: #B08430;
+            background: #FBF1D9;
+        }
+        #syncStatus.saved {
+            color: #4E7A65;
+            background: var(--teal-wash);
+        }
+        #syncStatus.error {
+            color: #A34E52;
+            background: var(--rose-wash);
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="bg-scene" aria-hidden="true">
-<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-        <linearGradient id="hillBack" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#E3F4F0"/>
-            <stop offset="100%" stop-color="#C3E6DE"/>
-        </linearGradient>
-        <linearGradient id="hillMid" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#B0DED2"/>
-            <stop offset="100%" stop-color="#84C9B8"/>
-        </linearGradient>
-        <linearGradient id="hillFront" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#79C2AF"/>
-            <stop offset="100%" stop-color="#4FA690"/>
-        </linearGradient>
-    </defs>
-
-    <circle cx="1310" cy="170" r="95" fill="#DFF2EC" opacity="0.55"/>
-    <circle cx="1310" cy="170" r="62" fill="#C9E9E0" opacity="0.5"/>
-
-    <path d="M0,560 C200,480 400,480 600,530 C800,580 1000,460 1200,510 C1350,545 1500,480 1600,510 L1600,900 L0,900 Z" fill="url(#hillBack)" opacity="0.6"/>
-
-    <path d="M0,650 C220,560 420,560 620,610 C820,660 1020,540 1220,600 C1380,645 1500,580 1600,610 L1600,900 L0,900 Z" fill="url(#hillMid)" opacity="0.65"/>
-
-    <path d="M0,740 C220,660 440,660 660,710 C860,750 1080,640 1300,700 C1440,735 1520,690 1600,700 L1600,900 L0,900 Z" fill="url(#hillFront)" opacity="0.7"/>
-
-    <g opacity="0.35" fill="none" stroke="#8FB5AC" stroke-width="4" stroke-linecap="round">
-        <path d="M260,140 q18,-16 36,0 q18,-16 36,0"/>
-        <path d="M980,90 q16,-14 32,0 q16,-14 32,0"/>
-    </g>
-</svg>
-</div>
-
-<div class="container">
-<div class="title-row">
-<h2>📚 Домашняя библиотека</h2>
-<span id="syncStatus" class="saved">Синхронизировано</span>
-<button class="history-btn" onclick="openHistory()">🕓 История изменений</button>
-</div>
-
-<div id="historyModal" class="modal-overlay hidden">
-<div class="modal-box">
-<div class="modal-header">
-<h3>🕓 Последние изменения</h3>
-<button class="modal-close" onclick="closeHistory()">✖</button>
-</div>
-<div id="historyList" class="modal-body"></div>
-</div>
-</div>
-
-<div id="bookModal" class="modal-overlay hidden">
-<div class="modal-box">
-<div class="modal-header">
-<h3 id="bookModalTitle">📖 Книга</h3>
-<button class="modal-close" onclick="closeBookDetails()">✖</button>
-</div>
-<div id="bookModalBody" class="modal-body"></div>
-</div>
-</div>
-
-<div class="search">
-<input id="search" placeholder="Поиск..." oninput="filter()">
-</div>
-
-<div class="form">
-    <input id="author" placeholder="Автор">
-    <datalist id="authorSuggestions"></datalist>
-    <input id="book" placeholder="Книга">
-    <button class="add" onclick="add()">Добавить</button>
-</div>
-
-
-<div class="table-wrapper">
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Автор / Книга</th>
-<th>Игорь</th>
-<th>Ира</th>
-<th>Действия</th>
-</tr>
-</thead>
-<tbody id="tbody"></tbody>
-</table>
-</div>
-
-
-<div id="stats"></div>
-
-
-<script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyALTvJQJNtiPHVD0412yqehh5M6m_dBsH_rx_Qbl9rah8yOrNzA3evKaHqu50wX8bzmQ/exec";
-let DATA = [];
-
-const syncStatus = document.getElementById('syncStatus');
-
-function setSyncStatus(state) {
-    syncStatus.classList.remove('saving', 'saved', 'error');
-    syncStatus.classList.add(state);
-
-    const texts = {
-        saving: 'Идёт синхронизация…',
-        saved: 'Синхронизировано',
-        error: 'Ошибка синхронизации'
-    };
-    syncStatus.textContent = texts[state] || texts.saved;
-
-    if (state === 'error') {
-        clearTimeout(window.syncErrorTimeout);
-        window.syncErrorTimeout = setTimeout(() => setSyncStatus('saved'), 3000);
-    }
-}
-
-// ===== УПРАВЛЕНИЕ ПОДСКАЗКАМИ =====
-function updateAuthorSuggestions() {
-    const authors = new Set();
-    for (let i = 1; i < DATA.length; i++) {
-        const item = DATA[i];
-        if (item && item.author) {
-            authors.add(item.author);
-        }
-    }
-    const datalist = document.getElementById('authorSuggestions');
-    datalist.innerHTML = '';
-    for (const author of authors) {
-        const option = document.createElement('option');
-        option.value = author;
-        datalist.appendChild(option);
-    }
-}
-
-// Настройка поведения поля "Автор"
-const authorInput = document.getElementById('author');
-const bookInput = document.getElementById('book');
-
-// Убираем list по умолчанию, чтобы при фокусе не показывать всё сразу
-authorInput.removeAttribute('list');
-
-authorInput.addEventListener('focus', function() {
-    // Если поле не пустое – показываем список, иначе скрываем
-    if (this.value.trim() !== '') {
-        this.setAttribute('list', 'authorSuggestions');
-    } else {
-        this.removeAttribute('list');
-    }
-});
-
-authorInput.addEventListener('input', function() {
-    const val = this.value.trim();
-    if (val.length >= 1) {
-        this.setAttribute('list', 'authorSuggestions');
-    } else {
-        this.removeAttribute('list');
-    }
-});
-
-// ===== ОСНОВНЫЕ ФУНКЦИИ =====
-
-async function load() {
-    setSyncStatus('saving');
-    try {
-        const res = await fetch(API_URL);
-        DATA = await res.json();
-        updateAuthorSuggestions();
-        setSyncStatus('saved');
-        applyFilters();
-    } catch (err) {
-        setSyncStatus('error');
-        console.error('Load error:', err);
-    }
-}
-
-function groupByAuthor(data) {
-    const map = {};
-    data.forEach(item => {
-        if (!map[item.author]) map[item.author] = [];
-        map[item.author].push(item);
-    });
-    return map;
-}
-
-function render(data) {
-    const tbody = document.getElementById("tbody");
-    tbody.innerHTML = "";
-
-    const grouped = groupByAuthor(data);
-    let index = 1;
-
-    for (const author in grouped) {
-        const authorId = "author_" + index;
-
-        const trAuthor = document.createElement("tr");
-        trAuthor.className = "author-row " + authorId;
-        trAuthor.dataset.group = authorId;
-        trAuthor.onclick = () => toggle(author);
-
-        trAuthor.innerHTML = `
-            <td>${index++}</td>
-            <td colspan="3">👤 ${author} <button class="add-book-btn" onclick="event.stopPropagation(); addBookToAuthor('${author.replace(/'/g, "\\'")}', this)">+ книга</button></td>
-            <td></td>
-        `;
-        tbody.appendChild(trAuthor);
-
-        grouped[author].forEach(item => {
-            tbody.appendChild(buildBookRow(item, authorId));
-        });
-    }
-    updateStats(data);
-}
-
-let activeAuthor = null;
-let currentSearch = "";
-
-function toggle(authorName) {
-    if (activeAuthor === authorName) {
-        activeAuthor = null;
-    } else {
-        activeAuthor = authorName;
-    }
-    applyFilters();
-}
-
-async function add() {
-    const author = authorInput.value.trim();
-    const book = bookInput.value.trim();
-
-    if (!author || !book) {
-        alert("Нужен автор и книга");
-        return;
-    }
-
-    const tempId = Date.now();
-    DATA.push({ id: tempId, author, book, igor: false, ira: false });
-    updateAuthorSuggestions();
-    // Очищаем поля и убираем list у автора
-    authorInput.value = "";
-    authorInput.removeAttribute('list');
-    bookInput.value = "";
-    applyFilters();
-
-    setSyncStatus('saving');
-    try {
-        await fetch(API_URL, {
-            method: "POST",
-            body: JSON.stringify({ action: "add", author, book })
-        });
-        setSyncStatus('saved');
-        load();
-    } catch (err) {
-        setSyncStatus('error');
-        DATA = DATA.filter(x => x.id !== tempId);
-        updateAuthorSuggestions();
-        applyFilters();
-        alert("Ошибка при добавлении");
-    }
-}
-
-async function remove(id) {
-    const item = DATA.find(x => x.id === id);
-    const bookName = item ? item.book : "эту книгу";
-    if (!confirm(`Удалить «${bookName}»?`)) return;
-
-    const backup = DATA.slice();
-    DATA = DATA.filter(x => x.id !== id);
-    updateAuthorSuggestions();
-    applyFilters();
-
-    setSyncStatus('saving');
-    try {
-        await fetch(API_URL, {
-            method: "POST",
-            body: JSON.stringify({ action: "delete", id })
-        });
-        setSyncStatus('saved');
-        load();
-    } catch (err) {
-        setSyncStatus('error');
-        DATA = backup;
-        updateAuthorSuggestions();
-        applyFilters();
-        alert("Ошибка при удалении");
-    }
-}
-
-function buildBookRow(item, authorId) {
-    const tr = document.createElement("tr");
-    tr.className = authorId;
-    tr.dataset.id = item.id;
-
-    const hasAnnotation = item.annotation && item.annotation.trim();
-    const annotationIcon = hasAnnotation
-        ? `<span class="annotation-icon" title="Есть аннотация">📝</span>`
-        : "";
-
-    tr.innerHTML = `
-    <td colspan="2" class="book-cell"><span class="book-title-link" onclick="openBookDetails(${item.id})">${item.book}</span>${annotationIcon}</td>
-    <td>
-        <input type="checkbox"
-            ${item.igor ? "checked" : ""}
-            onchange="toggleRead(${item.id}, 'igor', this.checked)">
-    </td>
-    <td>
-        <input type="checkbox"
-            ${item.ira ? "checked" : ""}
-            onchange="toggleRead(${item.id}, 'ira', this.checked)">
-    </td>
-    <td class="actions">
-        <button class="edit" onclick="startEdit(${item.id})">✏️</button>
-        <button class="delete" onclick="remove(${item.id})">🗑</button>
-    </td>
-
-    `;
-    return tr;
-}
-
-function refreshAnnotationIcon(id) {
-    const tr = document.querySelector(`tr[data-id="${id}"]`);
-    if (!tr) return;
-
-    const item = DATA.find(x => x.id === id);
-    if (!item) return;
-
-    const titleLink = tr.querySelector(".book-title-link");
-    if (!titleLink) return;
-
-    const hasAnnotation = item.annotation && item.annotation.trim();
-    let iconEl = tr.querySelector(".annotation-icon");
-
-    if (hasAnnotation && !iconEl) {
-        iconEl = document.createElement("span");
-        iconEl.className = "annotation-icon";
-        iconEl.title = "Есть аннотация";
-        iconEl.textContent = "📝";
-        titleLink.after(iconEl);
-    } else if (!hasAnnotation && iconEl) {
-        iconEl.remove();
-    }
-}
-
-function startEdit(id) {
-    const item = DATA.find(x => x.id === id);
-    const tr = document.querySelector(`tr[data-id="${id}"]`);
-    if (!tr) return;
-
-    let authorRow = tr.previousElementSibling;
-    while (authorRow && !authorRow.classList.contains("author-row")) {
-        authorRow = authorRow.previousElementSibling;
-    }
-    const currentAuthor = item.author;
-
-    tr.classList.add("editing");
-    tr.innerHTML = `
-    <td class="book-cell" colspan="2">
-        <input class="inline-input" id="edit-author-${id}" value="${currentAuthor}" placeholder="Автор" style="margin-bottom:4px">
-        <input class="inline-input" id="edit-book-${id}" value="${item.book}" placeholder="Книга">
-    </td>
-    <td>
-        <input type="checkbox"
-            ${item.igor ? "checked" : ""}
-            onchange="toggleRead(${item.id}, 'igor', this.checked)">
-    </td>
-    <td>
-        <input type="checkbox"
-            ${item.ira ? "checked" : ""}
-            onchange="toggleRead(${item.id}, 'ira', this.checked)">
-    </td>
-    <td class="actions">
-        <button class="save" onclick="saveEdit(${id})">💾</button>
-        <button class="cancel-btn" onclick="cancelEdit(${id})">✖</button>
-    </td>
-    `;
-    document.getElementById(`edit-book-${id}`).focus();
-}
-
-async function cancelEdit(id) {
-    applyFilters();
-}
-
-async function saveEdit(id) {
-    const author = document.getElementById(`edit-author-${id}`).value.trim();
-    const book   = document.getElementById(`edit-book-${id}`).value.trim();
-
-    if (!author || !book) {
-        alert("Нужен автор и книга");
-        return;
-    }
-
-    const item = DATA.find(x => x.id === id);
-    const backup = { ...item };
-    item.author = author;
-    item.book = book;
-    updateAuthorSuggestions();
-    applyFilters();
-
-    setSyncStatus('saving');
-    try {
-        await fetch(API_URL, {
-            method: "POST",
-            body: JSON.stringify({ action: "update", id, author, book })
-        });
-        setSyncStatus('saved');
-    } catch (err) {
-        setSyncStatus('error');
-        Object.assign(item, backup);
-        updateAuthorSuggestions();
-        applyFilters();
-        alert("Ошибка при редактировании");
-    }
-}
-
-async function edit(id) {
-    startEdit(id);
-}
-
-async function toggleRead(id, field, value) {
-    const item = DATA.find(x => x.id === id);
-    const backup = item[field];
-    item[field] = value;
-    updateStats(DATA.slice(1));
-
-    setSyncStatus('saving');
-    try {
-        await fetch(API_URL, {
-            method: "POST",
-            body: JSON.stringify({ action: "toggle", id, field, value })
-        });
-        setSyncStatus('saved');
-    } catch (err) {
-        setSyncStatus('error');
-        item[field] = backup;
-        updateStats(DATA.slice(1));
-        alert("Ошибка при изменении");
-    }
-}
-
-function filter() {
-    currentSearch = document.getElementById("search").value.toLowerCase();
-    applyFilters();
-}
-
-function applyFilters() {
-    let data = DATA.slice(1);
-
-    if (activeAuthor) {
-        data = data.filter(item => item.author === activeAuthor);
-    } else if (currentSearch) {
-        data = data.filter(item =>
-            (item.author + item.book).toLowerCase().includes(currentSearch)
-        );
-    }
-
-    render(data);
-}
-
-function updateStats(data) {
-    const booksCount = data.length;
-    const authors = new Set(data.map(item => item.author));
-    const authorsCount = authors.size;
-    const igorRead = data.filter(item => item.igor).length;
-    const iraRead  = data.filter(item => item.ira).length;
-
-    document.getElementById("stats").innerHTML =
-        `📚 Книг: <b>${booksCount}</b> &nbsp;|&nbsp; 👤 Авторов: <b>${authorsCount}</b>` +
-        `<div class="read-stats">` +
-        `<span class="read-badge">Игорь прочитал: <b>${igorRead}</b> из ${booksCount}</span>` +
-        `<span class="read-badge">Ира прочитала: <b>${iraRead}</b> из ${booksCount}</span>` +
-        `</div>`;
-}
-
-function addBookToAuthor(author, btn) {
-    const authorRow = btn.closest("tr");
-    const existingForm = authorRow.nextElementSibling;
-    if (existingForm && existingForm.classList.contains("inline-add-row")) {
-        existingForm.remove();
-        return;
-    }
-
-    document.querySelectorAll(".inline-add-row").forEach(r => r.remove());
-
-    const formId = "inline-add-" + Date.now();
-    const tr = document.createElement("tr");
-    tr.className = "inline-add-row";
-    tr.innerHTML = `
-        <td colspan="2" class="book-cell">
-            <input class="inline-input" id="${formId}" placeholder="Название книги">
-        </td>
-        <td colspan="2"></td>
-        <td class="actions">
-            <button class="save" onclick="submitInlineAdd('${author.replace(/'/g, "\\'")}', '${formId}')">💾</button>
-            <button class="cancel-btn" onclick="this.closest('tr').remove()">✖</button>
-        </td>
-    `;
-    authorRow.after(tr);
-    document.getElementById(formId).focus();
-
-    document.getElementById(formId).addEventListener("keydown", e => {
-        if (e.key === "Enter") submitInlineAdd(author, formId);
-        if (e.key === "Escape") tr.remove();
-    });
-}
-
-async function submitInlineAdd(author, formId) {
-    const input = document.getElementById(formId);
-    if (!input) return;
-    const book = input.value.trim();
-    if (!book) { input.focus(); return; }
-
-    const tr = input.closest("tr");
-
-    const tempId = Date.now();
-    DATA.push({ id: tempId, author, book, igor: false, ira: false });
-    updateAuthorSuggestions();
-    tr.remove();
-    applyFilters();
-
-    setSyncStatus('saving');
-    try {
-        await fetch(API_URL, {
-            method: "POST",
-            body: JSON.stringify({ action: "add", author, book })
-        });
-        setSyncStatus('saved');
-        load();
-    } catch (err) {
-        setSyncStatus('error');
-        DATA = DATA.filter(x => x.id !== tempId);
-        updateAuthorSuggestions();
-        applyFilters();
-        alert("Ошибка при добавлении");
-    }
-}
-
-async function openHistory() {
-    const modal = document.getElementById("historyModal");
-    const list = document.getElementById("historyList");
-
-    modal.classList.remove("hidden");
-    list.innerHTML = `<div class="history-loading">Загрузка...</div>`;
-
-    try {
-        const res = await fetch(`${API_URL}?type=history`);
-        const history = await res.json();
-        renderHistory(history);
-    } catch (err) {
-        list.innerHTML = `<div class="history-error">Не удалось загрузить историю</div>`;
-    }
-}
-
-function closeHistory() {
-    document.getElementById("historyModal").classList.add("hidden");
-}
-
-function renderHistory(history) {
-    const list = document.getElementById("historyList");
-
-    if (!history || !history.length) {
-        list.innerHTML = `<div class="history-empty">Изменений пока нет</div>`;
-        return;
-    }
-
-    list.innerHTML = history.map(item => {
-        const date = new Date(item.time);
-        const formatted = date.toLocaleString("ru-RU", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit"
-        });
-
-        return `
-            <div class="history-item">
-                <div class="history-time">${formatted}</div>
-                <div class="history-desc">${item.description}</div>
-            </div>
-        `;
-    }).join("");
-}
-
-function openBookDetails(id) {
-    const item = DATA.find(x => x.id === id);
-    if (!item) return;
-
-    document.getElementById("bookModalTitle").textContent = "📖 " + item.book;
-
-    const hasAnnotation = item.annotation && item.annotation.trim();
-    const annotationText = hasAnnotation
-        ? item.annotation
-        : "Аннотация не найдена. Можно добавить вручную.";
-
-    const body = document.getElementById("bookModalBody");
-    body.innerHTML = `
-        <div class="book-author">👤 ${item.author}</div>
-        <p id="bookAnnotationText" class="book-annotation">${annotationText}</p>
-        <textarea id="bookAnnotationEdit" class="inline-input book-annotation-edit hidden" rows="5">${item.annotation || ""}</textarea>
-        <div class="book-modal-actions">
-            <button class="edit" id="bookAnnotationEditBtn" onclick="startEditAnnotation()">✏️ Редактировать</button>
-            <button class="save hidden" id="bookAnnotationSaveBtn" onclick="saveAnnotation(${id})">💾 Сохранить</button>
+    <!-- ===== ФОН — КНИЖНЫЙ УЮТ (повышенная видимость) ===== -->
+    <div class="bg-scene" aria-hidden="true">
+        <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- градиенты для книг и фона -->
+                <linearGradient id="bookGrad1" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#2FA98D" stop-opacity="0.45"/>
+                    <stop offset="100%" stop-color="#4FB3A7" stop-opacity="0.30"/>
+                </linearGradient>
+                <linearGradient id="bookGrad2" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#CC8FA0" stop-opacity="0.40"/>
+                    <stop offset="100%" stop-color="#D4A8B6" stop-opacity="0.25"/>
+                </linearGradient>
+                <linearGradient id="bookGrad3" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#7FAE86" stop-opacity="0.45"/>
+                    <stop offset="100%" stop-color="#A8C9AE" stop-opacity="0.30"/>
+                </linearGradient>
+                <linearGradient id="bookGrad4" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#5B8FBF" stop-opacity="0.40"/>
+                    <stop offset="100%" stop-color="#8AB3D6" stop-opacity="0.25"/>
+                </linearGradient>
+                <linearGradient id="shelfGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#A0BDB6" stop-opacity="0.35"/>
+                    <stop offset="100%" stop-color="#62807A" stop-opacity="0.50"/>
+                </linearGradient>
+                <linearGradient id="teaGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#D4C9B8" stop-opacity="0.45"/>
+                    <stop offset="100%" stop-color="#C4B8A5" stop-opacity="0.25"/>
+                </linearGradient>
+            </defs>
+
+            <!-- ====== ЛЕВАЯ КНИЖНАЯ ПОЛКА ====== -->
+            <g opacity="0.65">
+                <rect x="80" y="780" width="520" height="18" rx="3" fill="url(#shelfGrad)" stroke="#A0BDB6" stroke-width="1.2" stroke-opacity="0.35"/>
+                <rect x="80" y="798" width="520" height="4" rx="1" fill="#A0BDB6" fill-opacity="0.25"/>
+
+                <rect x="100" y="670" width="32" height="110" rx="2" fill="url(#bookGrad1)" stroke="#2FA98D" stroke-width="1.2" stroke-opacity="0.4"/>
+                <line x1="108" y1="670" x2="108" y2="780" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="116" y1="670" x2="116" y2="780" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="124" y1="670" x2="124" y2="780" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+
+                <rect x="142" y="655" width="28" height="125" rx="2" fill="url(#bookGrad2)" stroke="#CC8FA0" stroke-width="1.2" stroke-opacity="0.4"/>
+                <line x1="149" y1="655" x2="149" y2="780" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="156" y1="655" x2="156" y2="780" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                <rect x="170" y="660" width="4" height="22" rx="1" fill="#CC8FA0" fill-opacity="0.5"/>
+
+                <g transform="rotate(-12, 210, 780)">
+                    <rect x="190" y="670" width="30" height="110" rx="2" fill="url(#bookGrad3)" stroke="#7FAE86" stroke-width="1.2" stroke-opacity="0.4"/>
+                    <line x1="198" y1="670" x2="198" y2="780" stroke="#7FAE86" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="206" y1="670" x2="206" y2="780" stroke="#7FAE86" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="214" y1="670" x2="214" y2="780" stroke="#7FAE86" stroke-width="0.8" stroke-opacity="0.3"/>
+                </g>
+
+                <rect x="240" y="700" width="34" height="80" rx="2" fill="url(#bookGrad4)" stroke="#5B8FBF" stroke-width="1.2" stroke-opacity="0.4"/>
+                <line x1="249" y1="700" x2="249" y2="780" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="258" y1="700" x2="258" y2="780" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="267" y1="700" x2="267" y2="780" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+
+                <rect x="284" y="640" width="26" height="140" rx="2" fill="url(#bookGrad1)" stroke="#2FA98D" stroke-width="1.2" stroke-opacity="0.4"/>
+                <line x1="290" y1="640" x2="290" y2="780" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="296" y1="640" x2="296" y2="780" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="302" y1="640" x2="302" y2="780" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+
+                <g transform="rotate(10, 350, 780)">
+                    <rect x="330" y="660" width="28" height="120" rx="2" fill="url(#bookGrad3)" stroke="#7FAE86" stroke-width="1.2" stroke-opacity="0.4"/>
+                    <line x1="337" y1="660" x2="337" y2="780" stroke="#7FAE86" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="344" y1="660" x2="344" y2="780" stroke="#7FAE86" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="351" y1="660" x2="351" y2="780" stroke="#7FAE86" stroke-width="0.8" stroke-opacity="0.3"/>
+                </g>
+
+                <rect x="380" y="760" width="80" height="20" rx="2" fill="url(#bookGrad2)" stroke="#CC8FA0" stroke-width="1.2" stroke-opacity="0.4"/>
+                <line x1="390" y1="760" x2="390" y2="780" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="400" y1="760" x2="400" y2="780" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="410" y1="760" x2="410" y2="780" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="420" y1="760" x2="420" y2="780" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="430" y1="760" x2="430" y2="780" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="440" y1="760" x2="440" y2="780" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+
+                <rect x="475" y="720" width="22" height="60" rx="2" fill="url(#bookGrad4)" stroke="#5B8FBF" stroke-width="1.2" stroke-opacity="0.4"/>
+                <line x1="481" y1="720" x2="481" y2="780" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+            </g>
+
+            <!-- ====== ПРАВАЯ КНИЖНАЯ ПОЛКА ====== -->
+            <g opacity="0.65" transform="translate(900, 0)">
+                <!-- смещаем на 900 вправо, чтобы полка была справа -->
+                <rect x="80" y="780" width="520" height="18" rx="3" fill="url(#shelfGrad)" stroke="#A0BDB6" stroke-width="1.2" stroke-opacity="0.35"/>
+                <rect x="80" y="798" width="520" height="4" rx="1" fill="#A0BDB6" fill-opacity="0.25"/>
+
+                <rect x="100" y="670" width="32" height="110" rx="2" fill="url(#bookGrad2)" stroke="#CC8FA0" stroke-width="1.2" stroke-opacity="0.4"/>
+                <line x1="108" y1="670" x2="108" y2="780" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="116" y1="670" x2="116" y2="780" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="124" y1="670" x2="124" y2="780" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+
+                <rect x="142" y="655" width="28" height="125" rx="2" fill="url(#bookGrad1)" stroke="#2FA98D" stroke-width="1.2" stroke-opacity="0.4"/>
+                <line x1="149" y1="655" x2="149" y2="780" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="156" y1="655" x2="156" y2="780" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                <rect x="170" y="660" width="4" height="22" rx="1" fill="#2FA98D" fill-opacity="0.5"/>
+
+                <g transform="rotate(12, 210, 780)">
+                    <rect x="190" y="670" width="30" height="110" rx="2" fill="url(#bookGrad4)" stroke="#5B8FBF" stroke-width="1.2" stroke-opacity="0.4"/>
+                    <line x1="198" y1="670" x2="198" y2="780" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="206" y1="670" x2="206" y2="780" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="214" y1="670" x2="214" y2="780" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+                </g>
+
+                <rect x="240" y="700" width="34" height="80" rx="2" fill="url(#bookGrad3)" stroke="#7FAE86" stroke-width="1.2" stroke-opacity="0.4"/>
+                <line x1="249" y1="700" x2="249" y2="780" stroke="#7FAE86" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="258" y1="700" x2="258" y2="780" stroke="#7FAE86" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="267" y1="700" x2="267" y2="780" stroke="#7FAE86" stroke-width="0.8" stroke-opacity="0.3"/>
+
+                <rect x="284" y="640" width="26" height="140" rx="2" fill="url(#bookGrad2)" stroke="#CC8FA0" stroke-width="1.2" stroke-opacity="0.4"/>
+                <line x1="290" y1="640" x2="290" y2="780" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="296" y1="640" x2="296" y2="780" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="302" y1="640" x2="302" y2="780" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+
+                <g transform="rotate(-10, 350, 780)">
+                    <rect x="330" y="660" width="28" height="120" rx="2" fill="url(#bookGrad1)" stroke="#2FA98D" stroke-width="1.2" stroke-opacity="0.4"/>
+                    <line x1="337" y1="660" x2="337" y2="780" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="344" y1="660" x2="344" y2="780" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="351" y1="660" x2="351" y2="780" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                </g>
+
+                <rect x="380" y="760" width="80" height="20" rx="2" fill="url(#bookGrad4)" stroke="#5B8FBF" stroke-width="1.2" stroke-opacity="0.4"/>
+                <line x1="390" y1="760" x2="390" y2="780" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="400" y1="760" x2="400" y2="780" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="410" y1="760" x2="410" y2="780" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="420" y1="760" x2="420" y2="780" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="430" y1="760" x2="430" y2="780" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+                <line x1="440" y1="760" x2="440" y2="780" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+
+                <rect x="475" y="720" width="22" height="60" rx="2" fill="url(#bookGrad3)" stroke="#7FAE86" stroke-width="1.2" stroke-opacity="0.4"/>
+                <line x1="481" y1="720" x2="481" y2="780" stroke="#7FAE86" stroke-width="0.8" stroke-opacity="0.3"/>
+            </g>
+
+            <!-- ====== ПАРЯЩИЕ КНИГИ С ЗАКЛАДКАМИ ====== -->
+            <g opacity="0.55">
+                <g transform="rotate(-16, 220, 340)">
+                    <rect x="190" y="310" width="44" height="60" rx="3" fill="url(#bookGrad1)" stroke="#2FA98D" stroke-width="1.2" stroke-opacity="0.4"/>
+                    <line x1="200" y1="310" x2="200" y2="370" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="210" y1="310" x2="210" y2="370" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="220" y1="310" x2="220" y2="370" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="230" y1="310" x2="230" y2="370" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <rect x="234" y="315" width="5" height="28" rx="1.5" fill="#CC8FA0" fill-opacity="0.6"/>
+                </g>
+
+                <g transform="rotate(12, 1200, 260)">
+                    <rect x="1170" y="230" width="50" height="68" rx="3" fill="url(#bookGrad3)" stroke="#7FAE86" stroke-width="1.2" stroke-opacity="0.4"/>
+                    <line x1="1181" y1="230" x2="1181" y2="298" stroke="#7FAE86" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="1192" y1="230" x2="1192" y2="298" stroke="#7FAE86" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="1203" y1="230" x2="1203" y2="298" stroke="#7FAE86" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="1214" y1="230" x2="1214" y2="298" stroke="#7FAE86" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <rect x="1220" y="236" width="5" height="30" rx="1.5" fill="#2FA98D" fill-opacity="0.5"/>
+                </g>
+
+                <g transform="rotate(-8, 800, 180)">
+                    <rect x="770" y="150" width="46" height="64" rx="3" fill="url(#bookGrad2)" stroke="#CC8FA0" stroke-width="1.2" stroke-opacity="0.4"/>
+                    <line x1="780" y1="150" x2="780" y2="214" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="790" y1="150" x2="790" y2="214" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="800" y1="150" x2="800" y2="214" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="810" y1="150" x2="810" y2="214" stroke="#CC8FA0" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <rect x="816" y="155" width="5" height="26" rx="1.5" fill="#7FAE86" fill-opacity="0.5"/>
+                </g>
+
+                <g transform="rotate(20, 1350, 480)">
+                    <rect x="1320" y="450" width="38" height="54" rx="3" fill="url(#bookGrad4)" stroke="#5B8FBF" stroke-width="1.2" stroke-opacity="0.4"/>
+                    <line x1="1329" y1="450" x2="1329" y2="504" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="1338" y1="450" x2="1338" y2="504" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="1347" y1="450" x2="1347" y2="504" stroke="#5B8FBF" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <rect x="1358" y="455" width="4" height="24" rx="1.5" fill="#CC8FA0" fill-opacity="0.5"/>
+                </g>
+
+                <g transform="rotate(-22, 140, 560)">
+                    <rect x="110" y="530" width="42" height="58" rx="3" fill="url(#bookGrad1)" stroke="#2FA98D" stroke-width="1.2" stroke-opacity="0.4"/>
+                    <line x1="120" y1="530" x2="120" y2="588" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="130" y1="530" x2="130" y2="588" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="140" y1="530" x2="140" y2="588" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <line x1="150" y1="530" x2="150" y2="588" stroke="#2FA98D" stroke-width="0.8" stroke-opacity="0.3"/>
+                    <rect x="152" y="535" width="5" height="26" rx="1.5" fill="#7FAE86" fill-opacity="0.5"/>
+                </g>
+            </g>
+
+            <!-- ====== ЧАШКА ЧАЯ ====== -->
+            <g opacity="0.60" transform="translate(1380, 320)">
+                <ellipse cx="0" cy="70" rx="42" ry="10" fill="#D4C9B8" fill-opacity="0.40" stroke="#C4B8A5" stroke-width="1.5" stroke-opacity="0.35"/>
+                <path d="M-28,10 L-24,60 Q0,70 24,60 L28,10 Z" fill="url(#teaGrad)" stroke="#C4B8A5" stroke-width="1.5" stroke-opacity="0.35"/>
+                <ellipse cx="0" cy="10" rx="28" ry="8" fill="#D4C9B8" fill-opacity="0.30" stroke="#C4B8A5" stroke-width="1.5" stroke-opacity="0.25"/>
+                <path d="M28,18 Q42,18 42,35 Q42,52 28,52" fill="none" stroke="#C4B8A5" stroke-width="3" stroke-opacity="0.40"/>
+                <path d="M-8,0 Q-12,-18 -6,-30" fill="none" stroke="#C4B8A5" stroke-width="2.5" stroke-opacity="0.35" stroke-linecap="round">
+                    <animate attributeName="d" dur="4s" repeatCount="indefinite"
+                    values="M-8,0 Q-12,-18 -6,-30;M-8,0 Q-4,-18 -10,-30;M-8,0 Q-12,-18 -6,-30"/>
+                    <animate attributeName="opacity" dur="4s" repeatCount="indefinite" values="0.35;0.20;0.35"/>
+                </path>
+                <path d="M0,-2 Q2,-22 -4,-36" fill="none" stroke="#C4B8A5" stroke-width="2.5" stroke-opacity="0.30" stroke-linecap="round">
+                    <animate attributeName="d" dur="5s" repeatCount="indefinite"
+                    values="M0,-2 Q2,-22 -4,-36;M0,-2 Q-2,-22 2,-36;M0,-2 Q2,-22 -4,-36"/>
+                    <animate attributeName="opacity" dur="5s" repeatCount="indefinite" values="0.30;0.15;0.30"/>
+                </path>
+                <path d="M8,0 Q14,-16 8,-28" fill="none" stroke="#C4B8A5" stroke-width="2.5" stroke-opacity="0.25" stroke-linecap="round">
+                    <animate attributeName="d" dur="3.5s" repeatCount="indefinite"
+                    values="M8,0 Q14,-16 8,-28;M8,0 Q10,-16 12,-28;M8,0 Q14,-16 8,-28"/>
+                    <animate attributeName="opacity" dur="3.5s" repeatCount="indefinite" values="0.25;0.12;0.25"/>
+                </path>
+            </g>
+
+            <!-- ====== МЕЛКИЕ ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ ====== -->
+            <g opacity="0.45">
+                <circle cx="320" cy="200" r="4" fill="#2FA98D" fill-opacity="0.35"/>
+                <circle cx="580" cy="120" r="3" fill="#CC8FA0" fill-opacity="0.35"/>
+                <circle cx="1050" cy="140" r="3.5" fill="#7FAE86" fill-opacity="0.35"/>
+                <circle cx="1480" cy="190" r="3" fill="#5B8FBF" fill-opacity="0.30"/>
+                <circle cx="80" cy="420" r="3.5" fill="#2FA98D" fill-opacity="0.30"/>
+                <circle cx="1520" cy="580" r="4" fill="#CC8FA0" fill-opacity="0.30"/>
+                <circle cx="620" cy="400" r="3" fill="#7FAE86" fill-opacity="0.25"/>
+                <circle cx="130" cy="180" r="3" fill="#5B8FBF" fill-opacity="0.25"/>
+                <circle cx="1450" cy="100" r="2.5" fill="#2FA98D" fill-opacity="0.25"/>
+                <circle cx="900" cy="560" r="3.5" fill="#CC8FA0" fill-opacity="0.25"/>
+
+                <path d="M460,240 Q464,250 460,260" stroke="#CC8FA0" stroke-width="2.5" fill="none" stroke-opacity="0.35" stroke-linecap="round"/>
+                <path d="M1120,440 Q1124,450 1120,460" stroke="#2FA98D" stroke-width="2.5" fill="none" stroke-opacity="0.30" stroke-linecap="round"/>
+                <path d="M680,300 Q684,310 680,320" stroke="#7FAE86" stroke-width="2.5" fill="none" stroke-opacity="0.30" stroke-linecap="round"/>
+            </g>
+        </svg>
+    </div>
+
+    <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+    <div class="container">
+        <div class="title-row">
+            <h2>📚 Домашняя библиотека</h2>
+            <span id="syncStatus" class="saved">Синхронизировано</span>
+            <button class="history-btn" onclick="openHistory()">🕓 История изменений</button>
         </div>
-    `;
 
-    document.getElementById("bookModal").classList.remove("hidden");
-}
+        <div id="historyModal" class="modal-overlay hidden">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h3>🕓 Последние изменения</h3>
+                    <button class="modal-close" onclick="closeHistory()">✖</button>
+                </div>
+                <div id="historyList" class="modal-body"></div>
+            </div>
+        </div>
 
-function closeBookDetails() {
-    document.getElementById("bookModal").classList.add("hidden");
-}
+        <div id="bookModal" class="modal-overlay hidden">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h3 id="bookModalTitle">📖 Книга</h3>
+                    <button class="modal-close" onclick="closeBookDetails()">✖</button>
+                </div>
+                <div id="bookModalBody" class="modal-body"></div>
+            </div>
+        </div>
 
-function startEditAnnotation() {
-    document.getElementById("bookAnnotationText").classList.add("hidden");
-    document.getElementById("bookAnnotationEdit").classList.remove("hidden");
-    document.getElementById("bookAnnotationEditBtn").classList.add("hidden");
-    document.getElementById("bookAnnotationSaveBtn").classList.remove("hidden");
-    document.getElementById("bookAnnotationEdit").focus();
-}
+        <div class="search">
+            <input id="search" placeholder="Поиск..." oninput="filter()" />
+        </div>
 
-async function saveAnnotation(id) {
-    const textarea = document.getElementById("bookAnnotationEdit");
-    const annotation = textarea.value.trim();
+        <div class="form">
+            <input id="author" placeholder="Автор" />
+            <datalist id="authorSuggestions"></datalist>
+            <input id="book" placeholder="Книга" />
+            <button class="add" onclick="add()">Добавить</button>
+        </div>
 
-    const item = DATA.find(x => x.id === id);
-    const backup = item.annotation;
-    item.annotation = annotation;
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Автор / Книга</th>
+                        <th>Игорь</th>
+                        <th>Ира</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+        </div>
 
-    refreshAnnotationIcon(id);
-    closeBookDetails();
+        <div id="stats"></div>
+    </div>
 
-    setSyncStatus('saving');
-    try {
-        await fetch(API_URL, {
-            method: "POST",
-            body: JSON.stringify({ action: "updateAnnotation", id, annotation })
+    <script>
+        // ===== КОНФИГУРАЦИЯ =====
+        const API_URL =
+            "https://script.google.com/macros/s/AKfycbyALTvJQJNtiPHVD0412yqehh5M6m_dBsH_rx_Qbl9rah8yOrNzA3evKaHqu50wX8bzmQ/exec";
+        let DATA = [];
+
+        const syncStatus = document.getElementById('syncStatus');
+
+        function setSyncStatus(state) {
+            syncStatus.classList.remove('saving', 'saved', 'error');
+            syncStatus.classList.add(state);
+            const texts = { saving: 'Идёт синхронизация…', saved: 'Синхронизировано', error: 'Ошибка синхронизации' };
+            syncStatus.textContent = texts[state] || texts.saved;
+            if (state === 'error') {
+                clearTimeout(window.syncErrorTimeout);
+                window.syncErrorTimeout = setTimeout(() => setSyncStatus('saved'), 3000);
+            }
+        }
+
+        // ===== ПОДСКАЗКИ АВТОРОВ =====
+        function updateAuthorSuggestions() {
+            const authors = new Set();
+            for (let i = 1; i < DATA.length; i++) {
+                const item = DATA[i];
+                if (item && item.author) authors.add(item.author);
+            }
+            const datalist = document.getElementById('authorSuggestions');
+            datalist.innerHTML = '';
+            for (const author of authors) {
+                const option = document.createElement('option');
+                option.value = author;
+                datalist.appendChild(option);
+            }
+        }
+
+        const authorInput = document.getElementById('author');
+        const bookInput = document.getElementById('book');
+
+        authorInput.removeAttribute('list');
+        authorInput.addEventListener('focus', function() {
+            if (this.value.trim() !== '') this.setAttribute('list', 'authorSuggestions');
+            else this.removeAttribute('list');
         });
-        setSyncStatus('saved');
-    } catch (err) {
-        setSyncStatus('error');
-        item.annotation = backup;
-        refreshAnnotationIcon(id);
-        alert("Ошибка при сохранении аннотации");
-    }
-}
+        authorInput.addEventListener('input', function() {
+            if (this.value.trim().length >= 1) this.setAttribute('list', 'authorSuggestions');
+            else this.removeAttribute('list');
+        });
 
-document.getElementById("bookModal").addEventListener("click", (e) => {
-    if (e.target.id === "bookModal") closeBookDetails();
-});
+        // ===== ОСНОВНЫЕ ФУНКЦИИ =====
+        async function load() {
+            setSyncStatus('saving');
+            try {
+                const res = await fetch(API_URL);
+                DATA = await res.json();
+                updateAuthorSuggestions();
+                setSyncStatus('saved');
+                applyFilters();
+            } catch (err) {
+                setSyncStatus('error');
+                console.error('Load error:', err);
+            }
+        }
 
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-        closeHistory();
-        closeBookDetails();
-    }
-});
+        function groupByAuthor(data) {
+            const map = {};
+            data.forEach(item => {
+                if (!map[item.author]) map[item.author] = [];
+                map[item.author].push(item);
+            });
+            return map;
+        }
 
-load();
-</script>
+        function render(data) {
+            const tbody = document.getElementById("tbody");
+            tbody.innerHTML = "";
+            const grouped = groupByAuthor(data);
+            let index = 1;
 
+            for (const author in grouped) {
+                const authorId = "author_" + index;
+                const trAuthor = document.createElement("tr");
+                trAuthor.className = "author-row " + authorId;
+                trAuthor.dataset.group = authorId;
+                trAuthor.onclick = () => toggle(author);
+                trAuthor.innerHTML = `
+                        <td>${index++}</td>
+                        <td colspan="3">👤 ${author} <button class="add-book-btn" onclick="event.stopPropagation(); addBookToAuthor('${author.replace(/'/g, "\\'")}', this)">+ книга</button></td>
+                        <td></td>
+                    `;
+                tbody.appendChild(trAuthor);
+
+                grouped[author].forEach(item => {
+                    tbody.appendChild(buildBookRow(item, authorId));
+                });
+            }
+            updateStats(data);
+        }
+
+        let activeAuthor = null;
+        let currentSearch = "";
+
+        function toggle(authorName) {
+            activeAuthor = (activeAuthor === authorName) ? null : authorName;
+            applyFilters();
+        }
+
+        async function add() {
+            const author = authorInput.value.trim();
+            const book = bookInput.value.trim();
+            if (!author || !book) { alert("Нужен автор и книга"); return; }
+
+            const tempId = Date.now();
+            DATA.push({ id: tempId, author, book, igor: false, ira: false });
+            updateAuthorSuggestions();
+            authorInput.value = "";
+            authorInput.removeAttribute('list');
+            bookInput.value = "";
+            applyFilters();
+
+            setSyncStatus('saving');
+            try {
+                await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "add", author, book }) });
+                setSyncStatus('saved');
+                load();
+            } catch (err) {
+                setSyncStatus('error');
+                DATA = DATA.filter(x => x.id !== tempId);
+                updateAuthorSuggestions();
+                applyFilters();
+                alert("Ошибка при добавлении");
+            }
+        }
+
+        async function remove(id) {
+            const item = DATA.find(x => x.id === id);
+            const bookName = item ? item.book : "эту книгу";
+            if (!confirm(`Удалить «${bookName}»?`)) return;
+
+            const backup = DATA.slice();
+            DATA = DATA.filter(x => x.id !== id);
+            updateAuthorSuggestions();
+            applyFilters();
+
+            setSyncStatus('saving');
+            try {
+                await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "delete", id }) });
+                setSyncStatus('saved');
+                load();
+            } catch (err) {
+                setSyncStatus('error');
+                DATA = backup;
+                updateAuthorSuggestions();
+                applyFilters();
+                alert("Ошибка при удалении");
+            }
+        }
+
+        function buildBookRow(item, authorId) {
+            const tr = document.createElement("tr");
+            tr.className = authorId;
+            tr.dataset.id = item.id;
+
+            const hasAnnotation = item.annotation && item.annotation.trim();
+            const annotationIcon = hasAnnotation ?
+                `<span class="annotation-icon" title="Есть аннотация">📝</span>` :
+                "";
+
+            tr.innerHTML = `
+                    <td colspan="2" class="book-cell"><span class="book-title-link" onclick="openBookDetails(${item.id})">${item.book}</span>${annotationIcon}</td>
+                    <td><input type="checkbox" ${item.igor ? "checked" : ""} onchange="toggleRead(${item.id}, 'igor', this.checked)"></td>
+                    <td><input type="checkbox" ${item.ira ? "checked" : ""} onchange="toggleRead(${item.id}, 'ira', this.checked)"></td>
+                    <td class="actions">
+                        <button class="edit" onclick="startEdit(${item.id})">✏️</button>
+                        <button class="delete" onclick="remove(${item.id})">🗑</button>
+                    </td>
+                `;
+            return tr;
+        }
+
+        function refreshAnnotationIcon(id) {
+            const tr = document.querySelector(`tr[data-id="${id}"]`);
+            if (!tr) return;
+            const item = DATA.find(x => x.id === id);
+            if (!item) return;
+            const titleLink = tr.querySelector(".book-title-link");
+            if (!titleLink) return;
+            const hasAnnotation = item.annotation && item.annotation.trim();
+            let iconEl = tr.querySelector(".annotation-icon");
+            if (hasAnnotation && !iconEl) {
+                iconEl = document.createElement("span");
+                iconEl.className = "annotation-icon";
+                iconEl.title = "Есть аннотация";
+                iconEl.textContent = "📝";
+                titleLink.after(iconEl);
+            } else if (!hasAnnotation && iconEl) {
+                iconEl.remove();
+            }
+        }
+
+        function startEdit(id) {
+            const item = DATA.find(x => x.id === id);
+            const tr = document.querySelector(`tr[data-id="${id}"]`);
+            if (!tr) return;
+
+            let authorRow = tr.previousElementSibling;
+            while (authorRow && !authorRow.classList.contains("author-row")) {
+                authorRow = authorRow.previousElementSibling;
+            }
+            const currentAuthor = item.author;
+
+            tr.classList.add("editing");
+            tr.innerHTML = `
+                    <td class="book-cell" colspan="2">
+                        <input class="inline-input" id="edit-author-${id}" value="${currentAuthor}" placeholder="Автор" style="margin-bottom:4px">
+                        <input class="inline-input" id="edit-book-${id}" value="${item.book}" placeholder="Книга">
+                    </td>
+                    <td><input type="checkbox" ${item.igor ? "checked" : ""} onchange="toggleRead(${item.id}, 'igor', this.checked)"></td>
+                    <td><input type="checkbox" ${item.ira ? "checked" : ""} onchange="toggleRead(${item.id}, 'ira', this.checked)"></td>
+                    <td class="actions">
+                        <button class="save" onclick="saveEdit(${id})">💾</button>
+                        <button class="cancel-btn" onclick="cancelEdit(${id})">✖</button>
+                    </td>
+                `;
+            document.getElementById(`edit-book-${id}`).focus();
+        }
+
+        async function cancelEdit(id) { applyFilters(); }
+
+        async function saveEdit(id) {
+            const author = document.getElementById(`edit-author-${id}`).value.trim();
+            const book = document.getElementById(`edit-book-${id}`).value.trim();
+            if (!author || !book) { alert("Нужен автор и книга"); return; }
+
+            const item = DATA.find(x => x.id === id);
+            const backup = { ...item };
+            item.author = author;
+            item.book = book;
+            updateAuthorSuggestions();
+            applyFilters();
+
+            setSyncStatus('saving');
+            try {
+                await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "update", id, author, book }) });
+                setSyncStatus('saved');
+            } catch (err) {
+                setSyncStatus('error');
+                Object.assign(item, backup);
+                updateAuthorSuggestions();
+                applyFilters();
+                alert("Ошибка при редактировании");
+            }
+        }
+
+        async function toggleRead(id, field, value) {
+            const item = DATA.find(x => x.id === id);
+            const backup = item[field];
+            item[field] = value;
+            updateStats(DATA.slice(1));
+
+            setSyncStatus('saving');
+            try {
+                await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "toggle", id, field, value }) });
+                setSyncStatus('saved');
+            } catch (err) {
+                setSyncStatus('error');
+                item[field] = backup;
+                updateStats(DATA.slice(1));
+                alert("Ошибка при изменении");
+            }
+        }
+
+        function filter() {
+            currentSearch = document.getElementById("search").value.toLowerCase();
+            applyFilters();
+        }
+
+        function applyFilters() {
+            let data = DATA.slice(1);
+            if (activeAuthor) {
+                data = data.filter(item => item.author === activeAuthor);
+            } else if (currentSearch) {
+                data = data.filter(item => (item.author + item.book).toLowerCase().includes(currentSearch));
+            }
+            render(data);
+        }
+
+        function updateStats(data) {
+            const booksCount = data.length;
+            const authors = new Set(data.map(item => item.author));
+            const authorsCount = authors.size;
+            const igorRead = data.filter(item => item.igor).length;
+            const iraRead = data.filter(item => item.ira).length;
+            document.getElementById("stats").innerHTML =
+                `📚 Книг: <b>${booksCount}</b> &nbsp;|&nbsp; 👤 Авторов: <b>${authorsCount}</b>` +
+                `<div class="read-stats">` +
+                `<span class="read-badge">Игорь прочитал: <b>${igorRead}</b> из ${booksCount}</span>` +
+                `<span class="read-badge">Ира прочитала: <b>${iraRead}</b> из ${booksCount}</span>` +
+                `</div>`;
+        }
+
+        function addBookToAuthor(author, btn) {
+            const authorRow = btn.closest("tr");
+            const existingForm = authorRow.nextElementSibling;
+            if (existingForm && existingForm.classList.contains("inline-add-row")) {
+                existingForm.remove();
+                return;
+            }
+            document.querySelectorAll(".inline-add-row").forEach(r => r.remove());
+
+            const formId = "inline-add-" + Date.now();
+            const tr = document.createElement("tr");
+            tr.className = "inline-add-row";
+            tr.innerHTML = `
+                    <td colspan="2" class="book-cell">
+                        <input class="inline-input" id="${formId}" placeholder="Название книги">
+                    </td>
+                    <td colspan="2"></td>
+                    <td class="actions">
+                        <button class="save" onclick="submitInlineAdd('${author.replace(/'/g, "\\'")}', '${formId}')">💾</button>
+                        <button class="cancel-btn" onclick="this.closest('tr').remove()">✖</button>
+                    </td>
+                `;
+            authorRow.after(tr);
+            document.getElementById(formId).focus();
+            document.getElementById(formId).addEventListener("keydown", e => {
+                if (e.key === "Enter") submitInlineAdd(author, formId);
+                if (e.key === "Escape") tr.remove();
+            });
+        }
+
+        async function submitInlineAdd(author, formId) {
+            const input = document.getElementById(formId);
+            if (!input) return;
+            const book = input.value.trim();
+            if (!book) { input.focus(); return; }
+
+            const tr = input.closest("tr");
+            const tempId = Date.now();
+            DATA.push({ id: tempId, author, book, igor: false, ira: false });
+            updateAuthorSuggestions();
+            tr.remove();
+            applyFilters();
+
+            setSyncStatus('saving');
+            try {
+                await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "add", author, book }) });
+                setSyncStatus('saved');
+                load();
+            } catch (err) {
+                setSyncStatus('error');
+                DATA = DATA.filter(x => x.id !== tempId);
+                updateAuthorSuggestions();
+                applyFilters();
+                alert("Ошибка при добавлении");
+            }
+        }
+
+        // ===== ИСТОРИЯ =====
+        async function openHistory() {
+            const modal = document.getElementById("historyModal");
+            const list = document.getElementById("historyList");
+            modal.classList.remove("hidden");
+            list.innerHTML = `<div class="history-loading">Загрузка...</div>`;
+            try {
+                const res = await fetch(`${API_URL}?type=history`);
+                const history = await res.json();
+                renderHistory(history);
+            } catch (err) {
+                list.innerHTML = `<div class="history-error">Не удалось загрузить историю</div>`;
+            }
+        }
+
+        function closeHistory() {
+            document.getElementById("historyModal").classList.add("hidden");
+        }
+
+        function renderHistory(history) {
+            const list = document.getElementById("historyList");
+            if (!history || !history.length) {
+                list.innerHTML = `<div class="history-empty">Изменений пока нет</div>`;
+                return;
+            }
+            list.innerHTML = history.map(item => {
+                const date = new Date(item.time);
+                const formatted = date.toLocaleString("ru-RU", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+                return `
+                        <div class="history-item">
+                            <div class="history-time">${formatted}</div>
+                            <div class="history-desc">${item.description}</div>
+                        </div>
+                    `;
+            }).join("");
+        }
+
+        // ===== АННОТАЦИИ =====
+        function openBookDetails(id) {
+            const item = DATA.find(x => x.id === id);
+            if (!item) return;
+            document.getElementById("bookModalTitle").textContent = "📖 " + item.book;
+            const hasAnnotation = item.annotation && item.annotation.trim();
+            const annotationText = hasAnnotation ? item.annotation : "Аннотация не найдена. Можно добавить вручную.";
+            const body = document.getElementById("bookModalBody");
+            body.innerHTML = `
+                    <div class="book-author">👤 ${item.author}</div>
+                    <p id="bookAnnotationText" class="book-annotation">${annotationText}</p>
+                    <textarea id="bookAnnotationEdit" class="inline-input book-annotation-edit hidden" rows="5">${item.annotation || ""}</textarea>
+                    <div class="book-modal-actions">
+                        <button class="edit" id="bookAnnotationEditBtn" onclick="startEditAnnotation()">✏️ Редактировать</button>
+                        <button class="save hidden" id="bookAnnotationSaveBtn" onclick="saveAnnotation(${id})">💾 Сохранить</button>
+                    </div>
+                `;
+            document.getElementById("bookModal").classList.remove("hidden");
+        }
+
+        function closeBookDetails() {
+            document.getElementById("bookModal").classList.add("hidden");
+        }
+
+        function startEditAnnotation() {
+            document.getElementById("bookAnnotationText").classList.add("hidden");
+            document.getElementById("bookAnnotationEdit").classList.remove("hidden");
+            document.getElementById("bookAnnotationEditBtn").classList.add("hidden");
+            document.getElementById("bookAnnotationSaveBtn").classList.remove("hidden");
+            document.getElementById("bookAnnotationEdit").focus();
+        }
+
+        async function saveAnnotation(id) {
+            const textarea = document.getElementById("bookAnnotationEdit");
+            const annotation = textarea.value.trim();
+            const item = DATA.find(x => x.id === id);
+            const backup = item.annotation;
+            item.annotation = annotation;
+            refreshAnnotationIcon(id);
+            closeBookDetails();
+
+            setSyncStatus('saving');
+            try {
+                await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateAnnotation", id,
+                        annotation }) });
+                setSyncStatus('saved');
+            } catch (err) {
+                setSyncStatus('error');
+                item.annotation = backup;
+                refreshAnnotationIcon(id);
+                alert("Ошибка при сохранении аннотации");
+            }
+        }
+
+        // ===== ЗАКРЫТИЕ МОДАЛОК ПО ESC / КЛИКУ =====
+        document.getElementById("bookModal").addEventListener("click", (e) => {
+            if (e.target.id === "bookModal") closeBookDetails();
+        });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") { closeHistory();
+                closeBookDetails(); }
+        });
+
+        // ===== СТАРТ =====
+        load();
+    </script>
 </body>
 </html>
