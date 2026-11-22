@@ -100,7 +100,7 @@
 
         /* ===== CONTAINER ===== */
         .container {
-            max-width: 980px;
+            max-width: 1120px;
             margin: 0 auto;
         }
 
@@ -255,14 +255,78 @@
             transform: scale(0.98);
         }
 
-        /* ===== UNIFIED TOOLBAR CARD ===== */
+        /* ===== UNIFIED TOOLBAR CARD (STICKY) ===== */
         .toolbar-card {
+            position: sticky;
+            top: 12px;
+            z-index: 40;
             background: var(--surface);
             border: 1px solid var(--line);
             border-radius: var(--radius-xl);
             padding: 14px 16px;
             margin-bottom: 18px;
             box-shadow: var(--shadow);
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .toolbar-card.is-stuck {
+            border-color: var(--line-strong);
+            box-shadow: 0 14px 34px rgba(44, 34, 30, 0.11), 0 3px 8px rgba(44, 34, 30, 0.05);
+        }
+
+        /* ===== SCROLL TO TOP BUTTON ===== */
+        .scroll-top-btn {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 35;
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            border-radius: 14px;
+            border: 1px solid var(--line-strong);
+            background: var(--surface);
+            color: var(--ink);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 24px rgba(44, 34, 30, 0.14), 0 2px 6px rgba(44, 34, 30, 0.06);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translate3d(0, 12px, 0);
+            transition: opacity 0.2s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.2s ease, background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .scroll-top-btn.is-visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translate3d(0, 0, 0);
+        }
+
+        .scroll-top-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #FFFDF9;
+        }
+
+        .scroll-top-btn:active {
+            transform: translate3d(0, 0, 0) scale(0.95);
+        }
+
+        @media (max-width: 640px) {
+            .toolbar-card {
+                top: 8px;
+            }
+            .scroll-top-btn {
+                right: 14px;
+                bottom: 16px;
+                width: 42px;
+                height: 42px;
+                border-radius: 13px;
+            }
         }
 
         .toolbar-main {
@@ -525,175 +589,59 @@
             }
         }
 
-        /* ===== TABLE ===== */
-        .table-wrapper {
-            width: 100%;
-            overflow-x: auto;
-            overflow-y: auto;
-            max-height: 70vh;
-            -webkit-overflow-scrolling: touch;
-            background: var(--surface);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--line);
-            contain: layout style paint;
-            transform: translateZ(0);
+        /* ===== LIBRARY SHELVES & AUTHOR SECTIONS ===== */
+        .library-shelves {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
 
-        .table-wrapper::-webkit-scrollbar {
-            width: 7px;
-            height: 7px;
+        .author-section {
+            content-visibility: auto;
+            contain-intrinsic-size: 0 380px;
         }
 
-        .table-wrapper::-webkit-scrollbar-track {
-            background: transparent;
-            margin-top: 44px;
-        }
-
-        .table-wrapper::-webkit-scrollbar-thumb {
-            background: var(--line-strong);
-            border-radius: 999px;
-        }
-
-        .table-wrapper::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-soft);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-            min-width: 460px;
-        }
-
-        thead th {
-            position: sticky;
-            top: 0;
-            z-index: 5;
-            background: var(--bg-warm);
-            color: var(--ink-soft);
-            font-family: var(--font-sans);
-            font-size: 11.5px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            padding: 13px 12px;
-            border-bottom: 1px solid var(--line-strong);
-            text-align: left;
-            white-space: nowrap;
-        }
-
-        /* column widths (controlled by thead for fixed layout) */
-        thead th:nth-child(1) {
-            width: 48px;
-            text-align: center;
-            padding-left: 10px;
-            padding-right: 6px;
-        }
-
-        thead th:nth-child(2) {
-            width: auto;
-        }
-
-        thead th:nth-child(3),
-        thead th:nth-child(4) {
-            width: 72px;
-            text-align: center;
-            padding-left: 4px;
-            padding-right: 4px;
-        }
-
-        thead th:nth-child(5) {
-            width: 96px;
-            text-align: right;
-            padding-right: 16px;
-        }
-
-        td {
-            padding: 11px 12px;
-            border-bottom: 1px solid var(--line);
-            vertical-align: middle;
-        }
-
-        td.num-cell {
-            text-align: center;
-            color: var(--ink-faint);
-            font-size: 12.5px;
-            font-weight: 600;
-            font-variant-numeric: tabular-nums;
-            padding-left: 10px;
-            padding-right: 6px;
-        }
-
-        td.author-cell {
-            text-align: left;
-            padding-right: 14px;
-        }
-
-        td.check-cell {
-            text-align: center;
-            padding-left: 4px;
-            padding-right: 4px;
-        }
-
-        td.actions {
-            text-align: right;
-            padding-right: 14px;
-            white-space: nowrap;
-        }
-
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        tbody tr:not(.author-row):not(.editing):not(.inline-add-row):hover {
-            background: var(--surface-2);
-        }
-
-        td.book-cell {
-            white-space: normal;
-            word-break: break-word;
-            text-align: left;
-            padding-left: 22px;
-        }
-
-        /* ===== AUTHOR ROW ===== */
-        .author-row {
+        .author-section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 10px 14px;
+            margin-bottom: 14px;
+            border-radius: var(--radius-lg);
             background: var(--surface-author);
+            border: 1px solid var(--line);
             cursor: pointer;
         }
 
-        .author-row:hover {
+        .author-section-header:hover {
             background: var(--surface-author-hover);
         }
 
-        .author-row.is-active {
+        .author-section-header.is-active {
             background: var(--surface-author-active);
+            border-color: rgba(196, 109, 75, 0.32);
             box-shadow: inset 3px 0 0 var(--accent);
         }
 
-        .author-row td {
-            padding-top: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--line);
-        }
-
-        .author-cell-content {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            flex-wrap: wrap;
+        .author-index {
+            color: var(--ink-faint);
+            font-size: 12.5px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            min-width: 22px;
         }
 
         .author-name {
             font-family: var(--font-serif);
-            font-size: 15.5px;
+            font-size: 18px;
             font-weight: 600;
             color: var(--ink);
-            letter-spacing: -0.005em;
+            letter-spacing: -0.01em;
+            line-height: 1.25;
         }
 
-        .author-row.is-active .author-name {
+        .author-section-header.is-active .author-name {
             color: var(--accent-deep);
         }
 
@@ -712,7 +660,7 @@
             font-variant-numeric: tabular-nums;
         }
 
-        .author-row.is-active .author-count {
+        .author-section-header.is-active .author-count {
             background: rgba(196, 109, 75, 0.16);
             color: var(--accent-deep);
         }
@@ -722,25 +670,25 @@
             align-items: center;
             color: var(--ink-faint);
             opacity: 0;
-            transition: opacity 0.16s ease, color 0.16s ease;
+            transition: opacity 0.15s ease, color 0.15s ease;
         }
 
-        .author-row:hover .author-filter-hint,
-        .author-row.is-active .author-filter-hint {
+        .author-section-header:hover .author-filter-hint,
+        .author-section-header.is-active .author-filter-hint {
             opacity: 1;
         }
 
-        .author-row.is-active .author-filter-hint {
+        .author-section-header.is-active .author-filter-hint {
             color: var(--accent);
         }
 
-        /* ===== INLINE ADD BUTTON ===== */
+        /* ===== INLINE ADD UNDER AUTHOR ===== */
         .add-book-btn {
             display: inline-flex;
             align-items: center;
             gap: 4px;
             margin-left: auto;
-            padding: 4px 10px;
+            padding: 5px 11px;
             background: var(--surface);
             color: var(--accent-deep);
             border: 1px solid rgba(196, 109, 75, 0.28);
@@ -763,116 +711,340 @@
             transform: scale(0.97);
         }
 
-        .inline-add-row td {
+        .inline-add-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 12px 14px;
+            margin-bottom: 14px;
             background: var(--sage-wash);
-            border-bottom: 1px solid rgba(109, 139, 104, 0.35);
+            border: 1px solid rgba(109, 139, 104, 0.35);
+            border-radius: var(--radius-lg);
         }
 
-        .inline-add-row .inline-input {
+        .inline-add-bar .inline-input {
+            flex: 1;
+            min-width: 180px;
             border-color: rgba(109, 139, 104, 0.55);
         }
 
-        .inline-add-row .inline-input:focus {
+        .inline-add-bar .inline-input:focus {
             border-color: var(--sage);
             box-shadow: 0 0 0 3px rgba(109, 139, 104, 0.18);
         }
 
-        /* ===== BOOK TITLE & ANNOTATION BADGE ===== */
-        .book-title-wrap {
+        .inline-add-bar button {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 600;
         }
 
-        .book-title-link {
+        .inline-add-bar .cancel-btn {
+            border-color: var(--line-strong);
+        }
+
+        /* ===== BOOKS GRID & CARDS ===== */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(194px, 1fr));
+            gap: 16px;
+        }
+
+        .book-card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+        }
+
+        .book-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-soft);
+            box-shadow: 0 12px 26px rgba(44, 34, 30, 0.09);
+        }
+
+        .book-card.is-editing {
+            transform: none;
+            background: var(--accent-wash);
+            border-color: rgba(196, 109, 75, 0.45);
+            padding: 14px;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .card-cover-stage {
+            position: relative;
+            padding: 14px 14px 10px;
+            background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 100%);
+        }
+
+        .card-cover-link {
+            display: block;
+            cursor: pointer;
+            border-radius: 4px 10px 10px 4px;
+            outline: none;
+        }
+
+        .card-cover-link .book-cover-frame {
+            border-radius: 4px 10px 10px 4px;
+            box-shadow:
+                -2px 0 0 rgba(44, 34, 30, 0.07),
+                0 8px 18px rgba(44, 34, 30, 0.13),
+                0 2px 5px rgba(44, 34, 30, 0.07);
+        }
+
+        .card-note-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 2;
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            background: rgba(255, 253, 249, 0.92);
+            border: 1px solid var(--line);
+            color: var(--accent);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(44, 34, 30, 0.12);
+        }
+
+        .card-note-badge:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #FFFDF9;
+        }
+
+        .card-actions {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 2;
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+
+        .book-card:hover .card-actions,
+        .book-card:focus-within .card-actions {
+            opacity: 1;
+        }
+
+        @media (hover: none) {
+            .card-actions {
+                opacity: 1;
+            }
+        }
+
+        .card-action-btn {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+            background: rgba(255, 253, 249, 0.94);
+            color: var(--ink-soft);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(44, 34, 30, 0.12);
+            transition: background 0.14s, color 0.14s, border-color 0.14s;
+        }
+
+        .card-action-btn:hover {
+            background: var(--surface);
+            color: var(--ink);
+            border-color: var(--line-strong);
+        }
+
+        .card-action-btn.delete:hover {
+            background: var(--danger-wash);
+            border-color: rgba(174, 79, 75, 0.35);
+            color: var(--danger);
+        }
+
+        .card-body {
+            padding: 4px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            gap: 10px;
+        }
+
+        .card-title {
+            margin: 0;
             cursor: pointer;
             font-family: var(--font-serif);
             color: var(--ink);
             font-size: 15px;
             font-weight: 500;
             letter-spacing: -0.005em;
+            line-height: 1.35;
+            min-height: 2.7em;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            word-break: break-word;
             transition: color 0.15s;
-            text-decoration: none;
-            border-bottom: 1px solid transparent;
         }
 
-        .book-title-link:hover {
+        .card-title:hover {
             color: var(--accent-deep);
-            border-bottom-color: var(--accent-soft);
         }
 
-        .annotation-icon {
+        .card-readers {
+            margin-top: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            padding-top: 9px;
+            border-top: 1px solid var(--line);
+        }
+
+        .reader-pill {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 22px;
-            height: 22px;
-            border-radius: 6px;
-            background: var(--accent-wash);
-            color: var(--accent);
-            vertical-align: middle;
+            gap: 5px;
+            padding: 6px 8px;
+            border-radius: 9px;
+            border: 1px solid var(--line);
+            background: var(--bg);
+            color: var(--ink-soft);
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.15s, color 0.15s;
-            flex-shrink: 0;
-        }
-
-        .annotation-icon:hover {
-            background: var(--accent);
-            color: #FFFDF9;
-        }
-
-        /* ===== ACTION BUTTONS ===== */
-        .actions {
+            transition: background 0.14s, border-color 0.14s, color 0.14s;
             white-space: nowrap;
         }
 
-        .actions-group {
-            display: inline-flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 4px;
-        }
-
-        .actions button {
-            width: 31px;
-            height: 31px;
-            padding: 0;
-            border: 1px solid transparent;
-            cursor: pointer;
-            border-radius: var(--radius-sm);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
-        }
-
-        .actions button:active {
-            transform: scale(0.94);
-        }
-
-        .edit {
-            background: transparent;
-            color: var(--ink-soft);
-        }
-
-        .edit:hover {
-            background: var(--surface-2);
-            border-color: var(--line-strong);
+        .reader-pill:hover {
+            border-color: var(--sage);
             color: var(--ink);
         }
 
-        .delete {
-            background: transparent;
-            color: var(--ink-faint);
+        .reader-pill-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1.5px solid var(--line-strong);
+            background: var(--surface);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: transparent;
+            transition: background 0.14s, border-color 0.14s, color 0.14s;
         }
 
-        .delete:hover {
-            background: var(--danger-wash);
-            border-color: rgba(174, 79, 75, 0.22);
-            color: var(--danger);
+        .reader-pill.is-read {
+            background: var(--sage-wash);
+            border-color: rgba(109, 139, 104, 0.35);
+            color: var(--sage-deep);
         }
 
+        .reader-pill.is-read .reader-pill-dot {
+            background: var(--sage);
+            border-color: var(--sage);
+            color: #FFFDF9;
+        }
+
+        .card-edit-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-deep);
+            margin-bottom: 4px;
+        }
+
+        .card-edit-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .card-edit-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .card-edit-actions button {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 8px 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid transparent;
+            font-family: var(--font-sans);
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .card-edit-actions .cancel-btn {
+            border-color: var(--line-strong);
+        }
+
+        @media (max-width: 560px) {
+            .library-shelves {
+                gap: 22px;
+            }
+            .books-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 11px;
+            }
+            .card-cover-stage {
+                padding: 10px 10px 8px;
+            }
+            .card-note-badge {
+                top: 15px;
+                left: 15px;
+            }
+            .card-actions {
+                top: 15px;
+                right: 15px;
+            }
+            .card-body {
+                padding: 2px 10px 10px;
+                gap: 8px;
+            }
+            .card-title {
+                font-size: 14px;
+            }
+            .reader-pill {
+                padding: 5px 5px;
+                font-size: 11.5px;
+                gap: 4px;
+            }
+            .author-name {
+                font-size: 16.5px;
+            }
+        }
+
+        /* ===== SHARED BUTTON & INPUT TOKENS ===== */
         .save {
             background: var(--sage);
             color: #FFFDF9;
@@ -882,21 +1054,15 @@
             background: var(--sage-deep);
         }
 
-        .actions .cancel-btn,
         .cancel-btn {
             background: var(--surface-2);
             color: var(--ink-soft);
             border-color: var(--line-strong);
         }
 
-        .actions .cancel-btn:hover,
         .cancel-btn:hover {
             background: var(--bg-warm);
             color: var(--ink);
-        }
-
-        tr.editing td {
-            background: var(--accent-wash);
         }
 
         .inline-input {
@@ -918,10 +1084,14 @@
         }
 
         .empty-state {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-xl);
             text-align: center;
-            padding: 44px 20px;
+            padding: 48px 20px;
             color: var(--ink-soft);
             font-size: 14.5px;
+            box-shadow: var(--shadow-sm);
         }
 
         .empty-state-icon {
@@ -936,52 +1106,10 @@
             margin-bottom: 10px;
         }
 
-        /* ===== CHECKBOX ===== */
-        input[type="checkbox"] {
-            appearance: none;
-            -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
-            margin: 0;
-            border-radius: 7px;
-            border: 1.5px solid var(--line-strong);
-            background: var(--surface);
-            cursor: pointer;
-            position: relative;
-            transition: background 0.16s ease, border-color 0.16s ease, transform 0.12s ease, box-shadow 0.16s ease;
-            vertical-align: middle;
-        }
-
-        input[type="checkbox"]:hover {
-            border-color: var(--sage);
-            box-shadow: 0 0 0 3px rgba(109, 139, 104, 0.14);
-        }
-
-        input[type="checkbox"]:active {
-            transform: scale(0.92);
-        }
-
-        input[type="checkbox"]:checked {
-            background: var(--sage);
-            border-color: var(--sage);
-        }
-
-        input[type="checkbox"]:checked::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            top: 46%;
-            width: 5px;
-            height: 9px;
-            border: solid #FFFDF9;
-            border-width: 0 2px 2px 0;
-            transform: translate(-50%, -50%) rotate(45deg);
-        }
-
-        /* ===== STATS FOOTER ===== */
+        /* ===== STATS BAR ===== */
         #stats {
-            margin-top: 18px;
-            padding: 18px 20px;
+            margin-bottom: 22px;
+            padding: 15px 18px;
             background: var(--surface);
             border-radius: var(--radius-xl);
             box-shadow: var(--shadow-sm);
@@ -1845,25 +1973,19 @@
             </div>
         </section>
 
-        <!-- ===== ТАБЛИЦА КНИГ ===== -->
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Автор / Книга</th>
-                        <th>Игорь</th>
-                        <th>Ира</th>
-                        <th>Действия</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody"></tbody>
-            </table>
-        </div>
-
         <!-- ===== СТАТИСТИКА ===== -->
         <div id="stats"></div>
+
+        <!-- ===== ПОЛКИ С КАРТОЧКАМИ КНИГ ===== -->
+        <main id="library" class="library-shelves"></main>
     </div>
+
+    <!-- ===== КНОПКА «НАВЕРХ» ===== -->
+    <button id="scrollTopBtn" class="scroll-top-btn" type="button" title="Наверх" aria-label="Вернуться наверх" onclick="scrollToTop()">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="18 15 12 9 6 15"/>
+        </svg>
+    </button>
 
     <!-- ===== МОДАЛКА ИСТОРИИ ===== -->
     <div id="historyModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="historyModalTitle">
@@ -2034,12 +2156,9 @@
         // ===== ОСНОВНЫЕ ФУНКЦИИ =====
         async function load() {
             setSyncStatus('saving');
+            const library = document.getElementById("library");
             if (!DATA.length) {
-                document.getElementById("tbody").innerHTML = `
-                    <tr>
-                        <td colspan="5" class="empty-state">Загружаем библиотеку…</td>
-                    </tr>
-                `;
+                library.innerHTML = `<div class="empty-state">Загружаем библиотеку…</div>`;
             }
             try {
                 const res = await fetch(API_URL);
@@ -2051,11 +2170,7 @@
                 setSyncStatus('error');
                 console.error('Load error:', err);
                 if (!DATA.length) {
-                    document.getElementById("tbody").innerHTML = `
-                        <tr>
-                            <td colspan="5" class="empty-state">Не удалось загрузить список книг</td>
-                        </tr>
-                    `;
+                    library.innerHTML = `<div class="empty-state">Не удалось загрузить список книг</div>`;
                 }
             }
         }
@@ -2095,18 +2210,16 @@
         }
 
         function render(data) {
-            const tbody = document.getElementById("tbody");
+            const library = document.getElementById("library");
             const grouped = groupByAuthor(data);
             const authorsList = Object.keys(grouped);
 
             if (!authorsList.length) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="empty-state">
-                            <div class="empty-state-icon">${ICONS.book}</div>
-                            <div>Книг по вашему запросу не найдено</div>
-                        </td>
-                    </tr>
+                library.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">${ICONS.book}</div>
+                        <div>Книг по вашему запросу не найдено</div>
+                    </div>
                 `;
                 updateStats(data);
                 return;
@@ -2117,38 +2230,40 @@
 
             for (const author of authorsList) {
                 const books = grouped[author];
-                const authorId = "author_" + index;
                 const isFiltered = activeAuthor === author;
 
-                const trAuthor = document.createElement("tr");
-                trAuthor.className = "author-row " + authorId + (isFiltered ? " is-active" : "");
-                trAuthor.dataset.group = authorId;
-                trAuthor.dataset.author = author;
-                trAuthor.title = isFiltered
+                const section = document.createElement("section");
+                section.className = "author-section";
+                section.dataset.author = author;
+
+                const header = document.createElement("div");
+                header.className = "author-section-header" + (isFiltered ? " is-active" : "");
+                header.title = isFiltered
                     ? "Нажмите, чтобы сбросить фильтр по автору"
                     : "Нажмите, чтобы показать только книги этого автора";
-                trAuthor.onclick = () => toggle(author);
+                header.onclick = () => toggle(author);
 
-                trAuthor.innerHTML = `
-                    <td class="num-cell">${index++}</td>
-                    <td colspan="4" class="author-cell">
-                        <div class="author-cell-content">
-                            <span class="author-name">${escapeHtml(author)}</span>
-                            <span class="author-count" title="Книг у автора">${books.length}</span>
-                            <span class="author-filter-hint" aria-hidden="true">${ICONS.filter}</span>
-                            <button type="button" class="add-book-btn" onclick="event.stopPropagation(); addBookToAuthor(this.closest('tr').dataset.author, this)">
-                                ${ICONS.plus} книга
-                            </button>
-                        </div>
-                    </td>
+                header.innerHTML = `
+                    <span class="author-index">${String(index++).padStart(2, "0")}</span>
+                    <span class="author-name">${escapeHtml(author)}</span>
+                    <span class="author-count" title="Книг у автора">${books.length}</span>
+                    <span class="author-filter-hint" aria-hidden="true">${ICONS.filter}</span>
+                    <button type="button" class="add-book-btn" onclick="event.stopPropagation(); addBookToAuthor(this.closest('.author-section').dataset.author, this)">
+                        ${ICONS.plus} книга
+                    </button>
                 `;
-                frag.appendChild(trAuthor);
+                section.appendChild(header);
 
+                const grid = document.createElement("div");
+                grid.className = "books-grid";
                 books.forEach(item => {
-                    frag.appendChild(buildBookRow(item, authorId));
+                    grid.appendChild(buildBookCard(item));
                 });
+                section.appendChild(grid);
+
+                frag.appendChild(section);
             }
-            tbody.replaceChildren(frag);
+            library.replaceChildren(frag);
             updateStats(data);
         }
 
@@ -2166,7 +2281,7 @@
             if (!author || !book) { alert("Нужен автор и книга"); return; }
 
             const tempId = Date.now();
-            DATA.push({ id: tempId, author, book, igor: false, ira: false });
+            DATA.push({ id: tempId, author, book, igor: false, ira: false, annotation: "", cover: "" });
             updateAuthorSuggestions();
             authorInput.value = "";
             authorInput.removeAttribute('list');
@@ -2211,75 +2326,132 @@
             }
         }
 
-        function buildBookRow(item, authorId) {
-            const tr = document.createElement("tr");
-            tr.className = authorId;
-            tr.dataset.id = item.id;
+        function mountCardCover(frame, item) {
+            const url = sanitizeCoverUrl(item.cover);
+            if (!url) {
+                frame.innerHTML = buildCoverPlaceholderHtml(item);
+                return;
+            }
+            const img = document.createElement("img");
+            img.className = "book-cover-img";
+            img.loading = "lazy";
+            img.decoding = "async";
+            img.referrerPolicy = "no-referrer";
+            img.alt = "Обложка: " + (item.book || "");
+            img.src = url;
+            img.onerror = () => {
+                frame.innerHTML = buildCoverPlaceholderHtml(item);
+            };
+            frame.replaceChildren(img);
+        }
+
+        function buildReaderPillsHtml(item) {
+            return `
+                <button type="button" class="reader-pill ${item.igor ? "is-read" : ""}" data-reader="igor" aria-pressed="${Boolean(item.igor)}" onclick="toggleRead(${item.id}, 'igor', this)">
+                    <span class="reader-pill-dot" aria-hidden="true">${ICONS.check}</span>
+                    Игорь
+                </button>
+                <button type="button" class="reader-pill ${item.ira ? "is-read" : ""}" data-reader="ira" aria-pressed="${Boolean(item.ira)}" onclick="toggleRead(${item.id}, 'ira', this)">
+                    <span class="reader-pill-dot" aria-hidden="true">${ICONS.check}</span>
+                    Ира
+                </button>
+            `;
+        }
+
+        function buildBookCard(item) {
+            const card = document.createElement("article");
+            card.className = "book-card";
+            card.dataset.id = item.id;
 
             const hasAnnotation = item.annotation && item.annotation.trim();
-            const annotationIcon = hasAnnotation
-                ? `<span class="annotation-icon" title="Открыть аннотацию" onclick="openBookDetails(${item.id})">${ICONS.note}</span>`
+            const noteBadge = hasAnnotation
+                ? `<button type="button" class="card-note-badge" title="Открыть аннотацию" aria-label="Открыть аннотацию" onclick="openBookDetails(${item.id})">${ICONS.note}</button>`
                 : "";
 
-            tr.innerHTML = `
-                <td colspan="2" class="book-cell">
-                    <span class="book-title-wrap">
-                        <span class="book-title-link" onclick="openBookDetails(${item.id})">${escapeHtml(item.book)}</span>
-                        ${annotationIcon}
-                    </span>
-                </td>
-                <td class="check-cell"><input type="checkbox" aria-label="Игорь прочитал" ${item.igor ? "checked" : ""} onchange="toggleRead(${item.id}, 'igor', this.checked)"></td>
-                <td class="check-cell"><input type="checkbox" aria-label="Ира прочитала" ${item.ira ? "checked" : ""} onchange="toggleRead(${item.id}, 'ira', this.checked)"></td>
-                <td class="actions">
-                    <div class="actions-group">
-                        <button type="button" class="edit" title="Редактировать" aria-label="Редактировать" onclick="startEdit(${item.id})">${ICONS.edit}</button>
-                        <button type="button" class="delete" title="Удалить" aria-label="Удалить" onclick="remove(${item.id})">${ICONS.trash}</button>
+            card.innerHTML = `
+                <div class="card-cover-stage">
+                    ${noteBadge}
+                    <div class="card-actions">
+                        <button type="button" class="card-action-btn edit" title="Редактировать" aria-label="Редактировать" onclick="startEdit(${item.id})">${ICONS.edit}</button>
+                        <button type="button" class="card-action-btn delete" title="Удалить" aria-label="Удалить" onclick="remove(${item.id})">${ICONS.trash}</button>
                     </div>
-                </td>
+                    <div class="card-cover-link" role="button" tabindex="0" aria-label="Открыть карточку книги ${escapeHtml(item.book)}" onclick="openBookDetails(${item.id})">
+                        <div class="book-cover-frame"></div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title" title="${escapeHtml(item.book)}" onclick="openBookDetails(${item.id})">${escapeHtml(item.book)}</h3>
+                    <div class="card-readers">
+                        ${buildReaderPillsHtml(item)}
+                    </div>
+                </div>
             `;
-            return tr;
+
+            const coverLink = card.querySelector(".card-cover-link");
+            coverLink.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openBookDetails(item.id);
+                }
+            });
+
+            mountCardCover(card.querySelector(".book-cover-frame"), item);
+            return card;
+        }
+
+        function refreshCardCover(id) {
+            const card = document.querySelector(`.book-card[data-id="${id}"]`);
+            if (!card) return;
+            const item = DATA.find(x => x.id === id);
+            const frame = card.querySelector(".book-cover-frame");
+            if (!item || !frame) return;
+            mountCardCover(frame, item);
         }
 
         function refreshAnnotationIcon(id) {
-            const tr = document.querySelector(`tr[data-id="${id}"]`);
-            if (!tr) return;
+            const card = document.querySelector(`.book-card[data-id="${id}"]`);
+            if (!card) return;
             const item = DATA.find(x => x.id === id);
             if (!item) return;
-            const titleLink = tr.querySelector(".book-title-link");
-            if (!titleLink) return;
+            const stage = card.querySelector(".card-cover-stage");
+            if (!stage) return;
             const hasAnnotation = item.annotation && item.annotation.trim();
-            let iconEl = tr.querySelector(".annotation-icon");
-            if (hasAnnotation && !iconEl) {
-                iconEl = document.createElement("span");
-                iconEl.className = "annotation-icon";
-                iconEl.title = "Открыть аннотацию";
-                iconEl.innerHTML = ICONS.note;
-                iconEl.onclick = () => openBookDetails(id);
-                titleLink.after(iconEl);
-            } else if (!hasAnnotation && iconEl) {
-                iconEl.remove();
+            let badgeEl = stage.querySelector(".card-note-badge");
+            if (hasAnnotation && !badgeEl) {
+                badgeEl = document.createElement("button");
+                badgeEl.type = "button";
+                badgeEl.className = "card-note-badge";
+                badgeEl.title = "Открыть аннотацию";
+                badgeEl.setAttribute("aria-label", "Открыть аннотацию");
+                badgeEl.innerHTML = ICONS.note;
+                badgeEl.onclick = () => openBookDetails(id);
+                stage.prepend(badgeEl);
+            } else if (!hasAnnotation && badgeEl) {
+                badgeEl.remove();
             }
         }
 
         function startEdit(id) {
             const item = DATA.find(x => x.id === id);
-            const tr = document.querySelector(`tr[data-id="${id}"]`);
-            if (!tr || !item) return;
+            const card = document.querySelector(`.book-card[data-id="${id}"]`);
+            if (!card || !item) return;
 
-            tr.classList.add("editing");
-            tr.innerHTML = `
-                <td class="book-cell" colspan="2">
-                    <input class="inline-input" id="edit-author-${id}" value="${escapeHtml(item.author)}" placeholder="Автор" style="margin-bottom:6px">
+            card.classList.add("is-editing");
+            card.innerHTML = `
+                <div class="card-edit-fields">
+                    <div class="card-edit-label">Редактирование</div>
+                    <input class="inline-input" id="edit-author-${id}" value="${escapeHtml(item.author)}" placeholder="Автор">
                     <input class="inline-input" id="edit-book-${id}" value="${escapeHtml(item.book)}" placeholder="Название книги">
-                </td>
-                <td class="check-cell"><input type="checkbox" aria-label="Игорь прочитал" ${item.igor ? "checked" : ""} onchange="toggleRead(${item.id}, 'igor', this.checked)"></td>
-                <td class="check-cell"><input type="checkbox" aria-label="Ира прочитала" ${item.ira ? "checked" : ""} onchange="toggleRead(${item.id}, 'ira', this.checked)"></td>
-                <td class="actions">
-                    <div class="actions-group">
-                        <button type="button" class="save" title="Сохранить" aria-label="Сохранить" onclick="saveEdit(${id})">${ICONS.save}</button>
-                        <button type="button" class="cancel-btn" title="Отмена" aria-label="Отмена" onclick="cancelEdit(${id})">${ICONS.close}</button>
+                </div>
+                <div>
+                    <div class="card-readers" style="border-top-color: rgba(196, 109, 75, 0.2); margin-bottom: 10px;">
+                        ${buildReaderPillsHtml(item)}
                     </div>
-                </td>
+                    <div class="card-edit-actions">
+                        <button type="button" class="save" onclick="saveEdit(${id})">${ICONS.save} Сохранить</button>
+                        <button type="button" class="cancel-btn" onclick="cancelEdit(${id})">Отмена</button>
+                    </div>
+                </div>
             `;
             const bookField = document.getElementById(`edit-book-${id}`);
             const authorField = document.getElementById(`edit-author-${id}`);
@@ -2319,10 +2491,17 @@
             }
         }
 
-        async function toggleRead(id, field, value) {
+        async function toggleRead(id, field, btnEl) {
             const item = DATA.find(x => x.id === id);
-            const backup = item[field];
+            if (!item) return;
+            const backup = Boolean(item[field]);
+            const value = !backup;
             item[field] = value;
+
+            if (btnEl) {
+                btnEl.classList.toggle("is-read", value);
+                btnEl.setAttribute("aria-pressed", String(value));
+            }
             updateStats(getFilteredData());
 
             setSyncStatus('saving');
@@ -2332,6 +2511,10 @@
             } catch (err) {
                 setSyncStatus('error');
                 item[field] = backup;
+                if (btnEl) {
+                    btnEl.classList.toggle("is-read", backup);
+                    btnEl.setAttribute("aria-pressed", String(backup));
+                }
                 updateStats(getFilteredData());
                 alert("Ошибка при изменении");
             }
@@ -2404,36 +2587,31 @@
         }
 
         function addBookToAuthor(author, btn) {
-            const authorRow = btn.closest("tr");
-            const existingForm = authorRow.nextElementSibling;
-            if (existingForm && existingForm.classList.contains("inline-add-row")) {
+            const section = btn.closest(".author-section");
+            if (!section) return;
+            const existingForm = section.querySelector(".inline-add-bar");
+            if (existingForm) {
                 existingForm.remove();
                 return;
             }
-            document.querySelectorAll(".inline-add-row").forEach(r => r.remove());
+            document.querySelectorAll(".inline-add-bar").forEach(el => el.remove());
 
             const formId = "inline-add-" + Date.now();
-            const tr = document.createElement("tr");
-            tr.className = "inline-add-row";
-            tr.dataset.author = author;
-            tr.innerHTML = `
-                <td colspan="2" class="book-cell">
-                    <input class="inline-input" id="${formId}" placeholder="Название новой книги…">
-                </td>
-                <td colspan="2"></td>
-                <td class="actions">
-                    <div class="actions-group">
-                        <button type="button" class="save" title="Добавить" aria-label="Добавить" onclick="submitInlineAdd(this.closest('tr').dataset.author, '${formId}')">${ICONS.save}</button>
-                        <button type="button" class="cancel-btn" title="Отмена" aria-label="Отмена" onclick="this.closest('tr').remove()">${ICONS.close}</button>
-                    </div>
-                </td>
+            const bar = document.createElement("div");
+            bar.className = "inline-add-bar";
+            bar.dataset.author = author;
+            bar.innerHTML = `
+                <input class="inline-input" id="${formId}" placeholder="Название новой книги для «${escapeHtml(author)}»…">
+                <button type="button" class="save" onclick="submitInlineAdd(this.closest('.inline-add-bar').dataset.author, '${formId}')">${ICONS.save} Добавить</button>
+                <button type="button" class="cancel-btn" onclick="this.closest('.inline-add-bar').remove()">Отмена</button>
             `;
-            authorRow.after(tr);
+            const header = section.querySelector(".author-section-header");
+            header.after(bar);
             const inputEl = document.getElementById(formId);
             inputEl.focus();
             inputEl.addEventListener("keydown", e => {
                 if (e.key === "Enter") submitInlineAdd(author, formId);
-                if (e.key === "Escape") tr.remove();
+                if (e.key === "Escape") bar.remove();
             });
         }
 
@@ -2443,11 +2621,11 @@
             const book = input.value.trim();
             if (!book) { input.focus(); return; }
 
-            const tr = input.closest("tr");
+            const bar = input.closest(".inline-add-bar");
             const tempId = Date.now();
-            DATA.push({ id: tempId, author, book, igor: false, ira: false });
+            DATA.push({ id: tempId, author, book, igor: false, ira: false, annotation: "", cover: "" });
             updateAuthorSuggestions();
-            tr.remove();
+            if (bar) bar.remove();
             applyFilters();
 
             setSyncStatus('saving');
@@ -2832,6 +3010,7 @@
 
             if (input) input.value = cover;
             renderCoverPreview(item, cover, false);
+            refreshCardCover(id);
 
             const triggerSpan = document.querySelector("#bookCoverTrigger span");
             if (triggerSpan) triggerSpan.textContent = cover ? "Изменить обложку" : "Добавить обложку";
@@ -2850,6 +3029,7 @@
             } catch (err) {
                 setSyncStatus('error');
                 item.cover = backup;
+                refreshCardCover(id);
                 if (currentModalBookId === id) {
                     renderCoverPreview(item, backup, false);
                     if (triggerSpan) triggerSpan.textContent = backup ? "Изменить обложку" : "Добавить обложку";
@@ -2913,6 +3093,31 @@
                 closeBookDetails();
             }
         });
+
+        // ===== ПРОКРУТКА НАВЕРХ И СОСТОЯНИЕ ЗАКРЕПЛЁННОГО ТУЛБАРА =====
+        const scrollTopBtn = document.getElementById("scrollTopBtn");
+        const toolbarCard = document.querySelector(".toolbar-card");
+        let lastShowTop = false;
+        let lastStuck = false;
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        window.addEventListener("scroll", () => {
+            const y = window.scrollY;
+            const showTop = y > 320;
+            const isStuck = y > 76;
+
+            if (showTop !== lastShowTop) {
+                lastShowTop = showTop;
+                scrollTopBtn.classList.toggle("is-visible", showTop);
+            }
+            if (isStuck !== lastStuck) {
+                lastStuck = isStuck;
+                toolbarCard.classList.toggle("is-stuck", isStuck);
+            }
+        }, { passive: true });
 
         // ===== СТАРТ =====
         load();
