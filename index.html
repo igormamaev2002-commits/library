@@ -2756,7 +2756,7 @@
                 candidatesEl.innerHTML = "";
                 candidatesEl.classList.add("hidden");
             }
-            setCoverHint("Ищем обложку на Лабиринте…", "");
+            setCoverHint("Ищем обложку на Лабиринте и Литресе…", "");
 
             let foundUrl = "";
             let candidates = [];
@@ -2770,13 +2770,17 @@
                     const json = await res.json();
                     if (Array.isArray(json.candidates)) {
                         candidates = json.candidates
-                            .map(c => ({ cover: sanitizeCoverUrl(c.cover), title: c.title || "" }))
+                            .map(c => ({
+                                cover: sanitizeCoverUrl(c.cover),
+                                title: c.title || "",
+                                source: c.source || ""
+                            }))
                             .filter(c => c.cover);
                     }
                     foundUrl = sanitizeCoverUrl(json.cover || (candidates[0] && candidates[0].cover) || "");
                 }
             } catch (err) {
-                console.error("Labirint cover search error:", err);
+                console.error("Cover search error:", err);
             } finally {
                 btn.disabled = false;
             }
@@ -2784,13 +2788,17 @@
             if (foundUrl) {
                 input.value = foundUrl;
                 renderCoverPreview(item, foundUrl, true);
+                const src = candidates[0] && candidates[0].source;
+                if (src) {
+                    setCoverHint(`Обложка найдена (${src}) — проверьте превью и нажмите «Сохранить».`, "is-ok");
+                }
                 if (candidatesEl && candidates.length > 1) {
                     candidatesEl.innerHTML = "";
                     candidates.forEach((cand, idx) => {
                         const b = document.createElement("button");
                         b.type = "button";
                         b.className = "cover-candidate-btn" + (idx === 0 ? " is-selected" : "");
-                        b.title = cand.title || "Выбрать обложку";
+                        b.title = (cand.title || "Выбрать обложку") + (cand.source ? ` (${cand.source})` : "");
                         b.onclick = () => selectCoverCandidate(id, cand.cover, b);
                         const img = document.createElement("img");
                         img.src = cand.cover;
@@ -2802,7 +2810,7 @@
                     candidatesEl.classList.remove("hidden");
                 }
             } else {
-                setCoverHint("На Лабиринте обложка не нашлась — можно вставить прямую ссылку вручную.", "is-error");
+                setCoverHint("Обложка не нашлась — можно вставить прямую ссылку вручную.", "is-error");
             }
         }
 
