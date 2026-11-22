@@ -62,6 +62,10 @@
             box-sizing: border-box;
         }
 
+        html {
+            overflow-x: clip;
+        }
+
         body {
             font-family: var(--font-sans);
             background-color: var(--bg);
@@ -70,13 +74,14 @@
             color: var(--ink);
             min-height: 100vh;
             line-height: 1.5;
+            overflow-x: clip;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
         @media (max-width: 640px) {
             body {
-                padding: 18px 12px 28px;
+                padding: 14px 10px calc(72px + env(safe-area-inset-bottom, 0px));
             }
         }
 
@@ -531,6 +536,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            max-width: 100%;
             padding: 5px 8px 5px 12px;
             background: var(--accent-wash);
             border: 1px solid rgba(196, 109, 75, 0.28);
@@ -540,6 +546,13 @@
             font-weight: 600;
             cursor: pointer;
             transition: background 0.15s, border-color 0.15s;
+        }
+
+        #activeFilterName {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            min-width: 0;
         }
 
         .filter-chip:hover {
@@ -766,6 +779,7 @@
             box-shadow: var(--shadow-sm);
             display: flex;
             flex-direction: column;
+            min-width: 0;
             overflow: hidden;
             transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
         }
@@ -924,6 +938,9 @@
             align-items: center;
             justify-content: center;
             gap: 5px;
+            min-width: 0;
+            max-width: 100%;
+            overflow: hidden;
             padding: 6px 8px;
             border-radius: 9px;
             border: 1px solid var(--line);
@@ -2097,6 +2114,8 @@
             font-size: 15px;
             max-width: 58ch;
             white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
         .book-annotation.is-empty {
@@ -2123,6 +2142,7 @@
             display: flex;
             gap: 8px;
             justify-content: flex-end;
+            flex-wrap: wrap;
         }
 
         .book-modal-actions button {
@@ -2201,6 +2221,8 @@
             font-size: 14px;
             color: var(--ink);
             line-height: 1.5;
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
         .history-empty,
@@ -2212,23 +2234,233 @@
             font-size: 14px;
         }
 
+        /* ===== КОМПЛЕКСНАЯ МОБИЛЬНАЯ АДАПТИВНОСТЬ ===== */
+        @media (max-width: 680px) {
+            #stats {
+                padding: 12px 14px;
+                border-radius: var(--radius-lg);
+                margin-bottom: 16px;
+            }
+            .stats-summary {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .stats-totals {
+                gap: 14px;
+            }
+            .read-stats {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+            .read-badge {
+                min-width: 0;
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+            .read-badge-top {
+                gap: 6px;
+            }
+        }
+
         @media (max-width: 640px) {
+            /* Шапка */
+            .app-header {
+                gap: 10px;
+                margin-bottom: 14px;
+            }
+            .brand {
+                min-width: 0;
+                max-width: 100%;
+                gap: 10px;
+            }
+            .app-title {
+                font-size: 21px;
+                overflow-wrap: break-word;
+            }
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+                gap: 8px;
+                flex-wrap: nowrap;
+            }
+            #syncStatus {
+                min-width: 0;
+                max-width: calc(100% - 110px);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+            .history-btn {
+                flex-shrink: 0;
+                padding: 7px 12px;
+                font-size: 12.5px;
+            }
+
+            /* Закреплённый тулбар и форма */
+            .toolbar-card {
+                top: 6px;
+                padding: 10px;
+                margin-bottom: 14px;
+                border-radius: var(--radius-lg);
+            }
+            .toolbar-main {
+                gap: 8px;
+            }
+            .search-field input,
+            .form input,
+            .inline-input,
+            .book-annotation-edit {
+                font-size: 16px; /* предотвращает авто-зум в iOS Safari */
+            }
+            .search-field input {
+                padding: 9px 36px 9px 38px;
+            }
+            .toggle-add-btn {
+                padding: 9px 14px;
+                font-size: 13.5px;
+            }
+            .form {
+                gap: 8px;
+                padding-top: 10px;
+            }
+            .form input {
+                min-width: 0;
+                width: 100%;
+                padding: 9px 12px;
+            }
+            .active-filter-bar {
+                margin-top: 10px;
+                padding-top: 10px;
+                gap: 6px;
+                font-size: 12.5px;
+            }
+
+            /* Карточка последних прочитанных */
+            .recent-read-card {
+                margin-bottom: 18px;
+                border-radius: var(--radius-lg);
+            }
+            .recent-read-header {
+                padding: 12px 12px;
+                gap: 10px;
+            }
+            .recent-read-title {
+                font-size: 15.5px;
+            }
+            .recent-read-controls {
+                width: 100%;
+                flex-wrap: nowrap;
+                gap: 8px;
+                margin-left: 0;
+            }
+            .recent-tabs {
+                flex: 1;
+                min-width: 0;
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            .recent-tab {
+                justify-content: center;
+                padding: 6px 4px;
+                font-size: 12px;
+                min-width: 0;
+            }
+            .recent-collapse-btn {
+                flex-shrink: 0;
+            }
+            .recent-read-body {
+                padding: 10px 12px 12px;
+            }
+
+            /* Заголовок автора и встроенное добавление книги */
+            .author-section-header {
+                flex-wrap: nowrap;
+                gap: 7px;
+                padding: 9px 11px;
+                margin-bottom: 11px;
+                border-radius: var(--radius-md);
+            }
+            .author-index {
+                min-width: 18px;
+                font-size: 11.5px;
+                flex-shrink: 0;
+            }
+            .author-name {
+                flex: 1 1 0;
+                min-width: 0;
+                font-size: 15.5px;
+                overflow-wrap: anywhere;
+            }
+            .author-count {
+                flex-shrink: 0;
+            }
+            .author-filter-hint {
+                display: none;
+            }
+            .add-book-btn {
+                flex-shrink: 0;
+                margin-left: 0;
+                padding: 5px 9px;
+                font-size: 11.5px;
+            }
+            .inline-add-bar {
+                padding: 10px;
+                gap: 8px;
+                border-radius: var(--radius-md);
+            }
+            .inline-add-bar .inline-input {
+                flex: 1 1 100%;
+                min-width: 0;
+            }
+            .inline-add-bar button {
+                flex: 1 1 0;
+                min-width: 0;
+                padding: 9px 10px;
+                font-size: 13px;
+            }
+
+            /* Кнопка «Наверх» с учётом нижнего выреза экрана */
+            .scroll-top-btn {
+                right: 12px;
+                bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+                width: 42px;
+                height: 42px;
+                border-radius: 13px;
+            }
+
+            /* Модальные окна */
+            .modal-overlay {
+                padding: 10px;
+            }
+            .modal-box {
+                max-height: 92vh;
+                max-height: 92dvh;
+                border-radius: var(--radius-lg);
+            }
             .modal-header {
-                padding: 18px 18px 14px;
+                padding: 14px 16px 12px;
+                gap: 10px;
             }
             .modal-body {
-                padding: 16px 18px 20px;
+                padding: 14px 16px 18px;
             }
             .modal-box--book .modal-header h3 {
-                font-size: 20px;
+                font-size: 19px;
             }
             .book-card-layout {
                 grid-template-columns: 1fr;
-                gap: 18px;
+                gap: 16px;
             }
             .book-cover-col {
-                width: 154px;
+                width: 148px;
                 margin: 0 auto;
+            }
+            .book-cover-editor {
+                padding: 12px;
+                border-radius: var(--radius-md);
             }
             .book-cover-editor-row {
                 flex-direction: column;
@@ -2236,9 +2468,141 @@
             }
             .cover-auto-btn {
                 justify-content: center;
+                padding: 9px 12px;
             }
             .book-annotation-card {
-                padding: 16px;
+                padding: 14px;
+                border-radius: var(--radius-md);
+            }
+            .book-annotation {
+                font-size: 14.5px;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .book-card.is-editing {
+                grid-column: 1 / -1;
+                padding: 12px;
+            }
+            .card-edit-actions {
+                flex-wrap: wrap;
+            }
+            .card-edit-actions button {
+                min-width: 0;
+            }
+            .card-note-badge {
+                top: 13px;
+                left: 13px;
+                width: 25px;
+                height: 25px;
+            }
+            .card-actions {
+                top: 13px;
+                right: 13px;
+                gap: 3px;
+            }
+            .card-action-btn {
+                width: 26px;
+                height: 26px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .book-modal-actions {
+                justify-content: stretch;
+            }
+            .book-modal-actions button {
+                flex: 1 1 auto;
+                justify-content: center;
+                padding: 9px 12px;
+                font-size: 13px;
+            }
+            .book-cover-editor-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .book-cover-editor-actions .cover-remove-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .book-cover-editor-right {
+                width: 100%;
+                margin-left: 0;
+            }
+            .book-cover-editor-right button {
+                flex: 1;
+                justify-content: center;
+            }
+            .recent-read-item {
+                padding: 8px 9px;
+                gap: 8px;
+            }
+            .recent-mini-cover {
+                width: 28px;
+                height: 42px;
+            }
+            .recent-read-book {
+                font-size: 13.5px;
+            }
+            .recent-reader-chip {
+                padding: 2px 6px;
+                font-size: 10.5px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .books-grid {
+                gap: 8px;
+            }
+            .card-cover-stage {
+                padding: 8px 8px 6px;
+            }
+            .card-body {
+                padding: 2px 8px 9px;
+                gap: 7px;
+            }
+            .card-title {
+                font-size: 13.5px;
+            }
+            .card-readers {
+                gap: 4px;
+                padding-top: 7px;
+            }
+            .reader-pill {
+                padding: 5px 4px;
+                font-size: 11px;
+                gap: 3px;
+            }
+            .reader-pill-dot {
+                width: 12px;
+                height: 12px;
+            }
+            .card-note-badge {
+                top: 11px;
+                left: 11px;
+                width: 24px;
+                height: 24px;
+            }
+            .card-actions {
+                top: 11px;
+                right: 11px;
+            }
+            .card-action-btn {
+                width: 24px;
+                height: 24px;
+            }
+            .read-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 350px) {
+            .card-readers {
+                grid-template-columns: 1fr;
+            }
+            .reader-pill {
+                padding: 5px 6px;
+                font-size: 11.5px;
             }
         }
     </style>
