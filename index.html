@@ -1220,6 +1220,346 @@
             }
         }
 
+        /* ===== RECENTLY READ CARD ===== */
+        .recent-read-card {
+            margin-bottom: 24px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .recent-read-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 14px 18px;
+        }
+
+        .recent-read-card:not(.is-collapsed) .recent-read-header {
+            border-bottom: 1px solid var(--line);
+        }
+
+        .recent-read-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .recent-read-mark {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: var(--accent-wash);
+            border: 1px solid rgba(196, 109, 75, 0.22);
+            color: var(--accent);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .recent-read-title-text {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            min-width: 0;
+        }
+
+        .recent-read-title {
+            margin: 0;
+            font-family: var(--font-serif);
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--ink);
+            line-height: 1.25;
+        }
+
+        .recent-read-subtitle {
+            font-size: 12px;
+            color: var(--ink-faint);
+            line-height: 1.3;
+        }
+
+        .recent-read-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-left: auto;
+        }
+
+        .recent-tabs {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 3px;
+            border-radius: 11px;
+            background: var(--bg);
+            border: 1px solid var(--line);
+        }
+
+        .recent-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 11px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--ink-soft);
+            font-family: var(--font-sans);
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+            white-space: nowrap;
+        }
+
+        .recent-tab:hover {
+            color: var(--ink);
+        }
+
+        .recent-tab.is-active {
+            background: var(--surface);
+            color: var(--ink);
+            box-shadow: 0 1px 4px rgba(44, 34, 30, 0.08);
+        }
+
+        .recent-tab-count {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ink-faint);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .recent-tab.is-active .recent-tab-count {
+            color: var(--accent-deep);
+        }
+
+        .recent-collapse-btn {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border-radius: 9px;
+            border: 1px solid var(--line);
+            background: var(--bg);
+            color: var(--ink-soft);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+
+        .recent-collapse-btn:hover {
+            background: var(--surface-2);
+            border-color: var(--line-strong);
+            color: var(--ink);
+        }
+
+        .recent-collapse-btn svg {
+            transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .recent-read-card.is-collapsed .recent-collapse-btn svg {
+            transform: rotate(-180deg);
+        }
+
+        .recent-read-body {
+            padding: 14px 18px 16px;
+        }
+
+        .recent-read-card.is-collapsed .recent-read-body {
+            display: none;
+        }
+
+        .recent-read-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .recent-read-item {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 8px 11px;
+            border-radius: var(--radius-md);
+            background: var(--bg);
+            border: 1px solid var(--line);
+            text-align: left;
+            font-family: inherit;
+            color: inherit;
+            width: 100%;
+            min-width: 0;
+            transition: background 0.15s, border-color 0.15s, transform 0.14s, box-shadow 0.15s;
+        }
+
+        .recent-read-item.is-clickable {
+            cursor: pointer;
+        }
+
+        .recent-read-item.is-clickable:hover {
+            background: var(--surface);
+            border-color: var(--accent-soft);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(44, 34, 30, 0.06);
+        }
+
+        .recent-read-rank {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--ink-faint);
+            font-variant-numeric: tabular-nums;
+            width: 18px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .recent-mini-cover {
+            position: relative;
+            width: 32px;
+            height: 48px;
+            border-radius: 3px 6px 6px 3px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: var(--bg-warm);
+            box-shadow: -1px 0 0 rgba(44, 34, 30, 0.08), 0 3px 8px rgba(44, 34, 30, 0.13);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .recent-mini-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .recent-mini-spine {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-serif);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            user-select: none;
+        }
+
+        .recent-read-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .recent-read-book {
+            font-family: var(--font-serif);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ink);
+            line-height: 1.28;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .recent-read-author {
+            font-size: 12px;
+            color: var(--ink-soft);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .recent-read-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+            flex-shrink: 0;
+            margin-left: 4px;
+        }
+
+        .recent-reader-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+
+        .recent-reader-chip.is-igor {
+            background: var(--accent-wash);
+            color: var(--accent-deep);
+            border: 1px solid rgba(196, 109, 75, 0.24);
+        }
+
+        .recent-reader-chip.is-ira {
+            background: var(--sage-wash);
+            color: var(--sage-deep);
+            border: 1px solid rgba(109, 139, 104, 0.25);
+        }
+
+        .recent-read-date {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--ink-faint);
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        .recent-read-empty {
+            text-align: center;
+            padding: 18px 12px;
+            font-size: 13.5px;
+            color: var(--ink-soft);
+        }
+
+        .recent-read-hint {
+            margin-top: 10px;
+            font-size: 11.5px;
+            color: var(--ink-faint);
+            text-align: right;
+        }
+
+        @media (max-width: 780px) {
+            .recent-read-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .recent-read-header {
+                padding: 12px 14px;
+            }
+            .recent-read-body {
+                padding: 12px 14px 14px;
+            }
+            .recent-read-controls {
+                width: 100%;
+                justify-content: space-between;
+                margin-left: 0;
+            }
+            .recent-read-rank {
+                display: none;
+            }
+        }
+
         /* ===== UTILITY ===== */
         .hidden {
             display: none;
@@ -1923,6 +2263,8 @@
             <symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
             <symbol id="ic-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></symbol>
             <symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></symbol>
+            <symbol id="ic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></symbol>
+            <symbol id="ic-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></symbol>
             <symbol id="ic-cover-ornament" viewBox="0 0 200 300" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                 <!-- Внешняя фигурная рамка с вогнутыми уголками -->
                 <path d="M 29 14 H 177 A 11 11 0 0 0 188 25 V 275 A 11 11 0 0 0 177 286 H 29 A 11 11 0 0 0 18 275 V 25 A 11 11 0 0 0 29 14 Z" stroke-width="1.25" opacity="0.52"/>
@@ -2046,6 +2388,40 @@
 
         <!-- ===== СТАТИСТИКА ===== -->
         <div id="stats"></div>
+
+        <!-- ===== ПОСЛЕДНИЕ ПРОЧИТАННЫЕ (ИЗ ИСТОРИИ) ===== -->
+        <section id="recentReadCard" class="recent-read-card" aria-label="Последние прочитанные книги">
+            <div class="recent-read-header">
+                <div class="recent-read-title-wrap">
+                    <div class="recent-read-mark" aria-hidden="true">
+                        <svg width="16" height="16"><use href="#ic-clock"/></svg>
+                    </div>
+                    <div class="recent-read-title-text">
+                        <h2 class="recent-read-title">Последние прочитанные</h2>
+                        <span class="recent-read-subtitle">Последние 10 книг Игоря и Иры по истории</span>
+                    </div>
+                </div>
+                <div class="recent-read-controls">
+                    <div class="recent-tabs" role="tablist" aria-label="Фильтр по читателю">
+                        <button type="button" class="recent-tab is-active" role="tab" aria-selected="true" data-tab="all" onclick="setRecentReadTab('all')">
+                            Все <span class="recent-tab-count" id="recentCountAll"></span>
+                        </button>
+                        <button type="button" class="recent-tab" role="tab" aria-selected="false" data-tab="igor" onclick="setRecentReadTab('igor')">
+                            Игорь <span class="recent-tab-count" id="recentCountIgor"></span>
+                        </button>
+                        <button type="button" class="recent-tab" role="tab" aria-selected="false" data-tab="ira" onclick="setRecentReadTab('ira')">
+                            Ира <span class="recent-tab-count" id="recentCountIra"></span>
+                        </button>
+                    </div>
+                    <button type="button" id="recentCollapseBtn" class="recent-collapse-btn" onclick="toggleRecentReadCard()" aria-expanded="true" title="Свернуть блок" aria-label="Свернуть или развернуть блок">
+                        <svg width="16" height="16"><use href="#ic-chevron"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="recentReadBody" class="recent-read-body">
+                <div class="recent-read-empty">Загружаем последние прочитанные книги…</div>
+            </div>
+        </section>
 
         <!-- ===== ПОЛКИ С КАРТОЧКАМИ КНИГ ===== -->
         <main id="library" class="library-shelves"></main>
@@ -2237,6 +2613,7 @@
                 updateAuthorSuggestions();
                 setSyncStatus('saved');
                 applyFilters();
+                renderRecentRead();
             } catch (err) {
                 setSyncStatus('error');
                 console.error('Load error:', err);
@@ -2573,6 +2950,8 @@
                 btnEl.classList.toggle("is-read", value);
                 btnEl.setAttribute("aria-pressed", String(value));
             }
+            const recentBackup = cloneRecentReadState();
+            applyOptimisticRecentRead(field, item, value);
             updateStats(getFilteredData());
 
             setSyncStatus('saving');
@@ -2586,6 +2965,7 @@
                     btnEl.classList.toggle("is-read", backup);
                     btnEl.setAttribute("aria-pressed", String(backup));
                 }
+                restoreRecentReadState(recentBackup);
                 updateStats(getFilteredData());
                 alert("Ошибка при изменении");
             }
@@ -2754,6 +3134,333 @@
                     </div>
                 `;
             }).join("") + `</div>`;
+        }
+
+        // ===== ПОСЛЕДНИЕ ПРОЧИТАННЫЕ КНИГИ (ИЗ ИСТОРИИ) =====
+        const RECENT_READ_LIMIT = 10;
+        const RECENT_COLLAPSE_KEY = "homeLibRecentCollapsed";
+        let activeRecentTab = "all";
+        let recentReadState = {
+            igor: [],
+            ira: [],
+            loaded: false,
+            error: false,
+            fallback: false
+        };
+
+        function normBookKey(book, author) {
+            return `${String(book || "").trim().toLowerCase()}||${String(author || "").trim().toLowerCase()}`;
+        }
+
+        function cloneRecentReadState() {
+            return {
+                igor: recentReadState.igor.map(x => ({ ...x })),
+                ira: recentReadState.ira.map(x => ({ ...x })),
+                loaded: recentReadState.loaded,
+                error: recentReadState.error,
+                fallback: recentReadState.fallback
+            };
+        }
+
+        function restoreRecentReadState(snapshot) {
+            recentReadState = snapshot;
+            renderRecentRead();
+        }
+
+        function parseRecentReadFromHistory(historyRows) {
+            const readRe = /^(Игорь|Ира)\s+прочитал(?:\(а\)|а)?\s+«(.+?)»\s+\((.+)\)$/;
+            const unreadRe = /^(Игорь|Ира)\s+снял(?:\(а\)|а)?\s+отметку\s+«прочитано»\s+с\s+книги\s+«(.+?)»\s+\((.+)\)$/;
+            const state = { igor: new Map(), ira: new Map() };
+
+            const ordered = (Array.isArray(historyRows) ? historyRows : [])
+                .filter(row => row && row.action === "toggle" && row.description)
+                .slice()
+                .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+
+            for (const row of ordered) {
+                const desc = String(row.description).trim();
+                let m = readRe.exec(desc);
+                if (m) {
+                    const reader = m[1] === "Игорь" ? "igor" : "ira";
+                    const book = m[2].trim();
+                    const author = m[3].trim();
+                    state[reader].set(normBookKey(book, author), {
+                        reader,
+                        book,
+                        author,
+                        time: row.time
+                    });
+                    continue;
+                }
+                m = unreadRe.exec(desc);
+                if (m) {
+                    const reader = m[1] === "Игорь" ? "igor" : "ira";
+                    const book = m[2].trim();
+                    const author = m[3].trim();
+                    state[reader].delete(normBookKey(book, author));
+                }
+            }
+
+            const sortDesc = (map) => Array.from(map.values())
+                .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+
+            return {
+                igor: sortDesc(state.igor),
+                ira: sortDesc(state.ira)
+            };
+        }
+
+        async function loadRecentRead() {
+            try {
+                const res = await fetch(`${API_URL}?type=recentRead&limit=${RECENT_READ_LIMIT}`);
+                const json = await res.json();
+
+                if (json && !Array.isArray(json) && Array.isArray(json.igor) && Array.isArray(json.ira)) {
+                    recentReadState = {
+                        igor: json.igor.map(x => ({ ...x, reader: "igor" })),
+                        ira: json.ira.map(x => ({ ...x, reader: "ira" })),
+                        loaded: true,
+                        error: false,
+                        fallback: false
+                    };
+                } else {
+                    // Запасной путь, если в Google Apps Script ещё не добавлен type=recentRead
+                    const histRes = await fetch(`${API_URL}?type=history`);
+                    const histJson = await histRes.json();
+                    const parsed = parseRecentReadFromHistory(histJson);
+                    recentReadState = {
+                        igor: parsed.igor,
+                        ira: parsed.ira,
+                        loaded: true,
+                        error: false,
+                        fallback: true
+                    };
+                }
+            } catch (err) {
+                console.error("Recent read load error:", err);
+                recentReadState = {
+                    ...recentReadState,
+                    loaded: true,
+                    error: true
+                };
+            }
+            renderRecentRead();
+        }
+
+        function applyOptimisticRecentRead(reader, item, isRead) {
+            if (reader !== "igor" && reader !== "ira") return;
+            const key = normBookKey(item.book, item.author);
+            const list = (recentReadState[reader] || []).filter(x => normBookKey(x.book, x.author) !== key);
+            if (isRead) {
+                list.unshift({
+                    reader,
+                    book: String(item.book || "").trim(),
+                    author: String(item.author || "").trim(),
+                    time: new Date().toISOString()
+                });
+            }
+            recentReadState[reader] = list;
+            recentReadState.loaded = true;
+            recentReadState.error = false;
+            renderRecentRead();
+        }
+
+        function buildCatalogIndex() {
+            const byExact = new Map();
+            const byBook = new Map();
+            for (let i = 1; i < DATA.length; i++) {
+                const item = DATA[i];
+                if (!item || !item.book) continue;
+                byExact.set(normBookKey(item.book, item.author), item);
+                const bk = String(item.book).trim().toLowerCase();
+                if (!byBook.has(bk)) byBook.set(bk, item);
+            }
+            return { byExact, byBook };
+        }
+
+        function getEnrichedRecentList(readerList, reader, catalog) {
+            const out = [];
+            const seen = new Set();
+            for (const entry of readerList || []) {
+                const key = normBookKey(entry.book, entry.author);
+                if (seen.has(key)) continue;
+                const matched = catalog.byExact.get(key) || catalog.byBook.get(String(entry.book || "").trim().toLowerCase()) || null;
+                // Если книга найдена в каталоге и отметка снята напрямую в таблице — не показываем её как прочитанную
+                if (matched && matched[reader] === false) continue;
+                seen.add(key);
+                out.push({
+                    reader,
+                    book: matched ? matched.book : entry.book,
+                    author: matched ? matched.author : entry.author,
+                    time: entry.time,
+                    matched
+                });
+            }
+            out.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+            return out;
+        }
+
+        function formatRecentDate(rawTime) {
+            const d = new Date(rawTime);
+            if (isNaN(d.getTime())) return { short: "", full: "" };
+            const now = new Date();
+            const sameYear = d.getFullYear() === now.getFullYear();
+            const short = d.toLocaleDateString("ru-RU", sameYear
+                ? { day: "numeric", month: "short" }
+                : { day: "numeric", month: "short", year: "numeric" }
+            );
+            const full = d.toLocaleString("ru-RU", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+            return { short, full };
+        }
+
+        function setRecentReadTab(tab) {
+            activeRecentTab = tab;
+            document.querySelectorAll("#recentReadCard .recent-tab").forEach(btn => {
+                const isActive = btn.dataset.tab === tab;
+                btn.classList.toggle("is-active", isActive);
+                btn.setAttribute("aria-selected", String(isActive));
+            });
+            renderRecentRead();
+        }
+
+        function toggleRecentReadCard(forceCollapsed) {
+            const card = document.getElementById("recentReadCard");
+            const btn = document.getElementById("recentCollapseBtn");
+            if (!card || !btn) return;
+            const collapsed = typeof forceCollapsed === "boolean"
+                ? forceCollapsed
+                : !card.classList.contains("is-collapsed");
+            card.classList.toggle("is-collapsed", collapsed);
+            btn.setAttribute("aria-expanded", String(!collapsed));
+            btn.title = collapsed ? "Развернуть блок" : "Свернуть блок";
+            try {
+                localStorage.setItem(RECENT_COLLAPSE_KEY, collapsed ? "1" : "0");
+            } catch (_) {}
+        }
+
+        function initRecentReadCollapse() {
+            try {
+                if (localStorage.getItem(RECENT_COLLAPSE_KEY) === "1") {
+                    toggleRecentReadCard(true);
+                }
+            } catch (_) {}
+        }
+
+        function renderRecentRead() {
+            const body = document.getElementById("recentReadBody");
+            if (!body) return;
+
+            if (!recentReadState.loaded) {
+                body.innerHTML = `<div class="recent-read-empty">Загружаем последние прочитанные книги…</div>`;
+                return;
+            }
+            if (recentReadState.error) {
+                body.innerHTML = `<div class="recent-read-empty">Не удалось загрузить историю прочитанных книг</div>`;
+                return;
+            }
+
+            const catalog = buildCatalogIndex();
+            const igorList = getEnrichedRecentList(recentReadState.igor, "igor", catalog).slice(0, RECENT_READ_LIMIT);
+            const iraList = getEnrichedRecentList(recentReadState.ira, "ira", catalog).slice(0, RECENT_READ_LIMIT);
+            const allList = [...igorList, ...iraList]
+                .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+                .slice(0, RECENT_READ_LIMIT);
+
+            const countAllEl = document.getElementById("recentCountAll");
+            const countIgorEl = document.getElementById("recentCountIgor");
+            const countIraEl = document.getElementById("recentCountIra");
+            if (countAllEl) countAllEl.textContent = allList.length ? String(allList.length) : "";
+            if (countIgorEl) countIgorEl.textContent = igorList.length ? String(igorList.length) : "";
+            if (countIraEl) countIraEl.textContent = iraList.length ? String(iraList.length) : "";
+
+            const items = activeRecentTab === "igor"
+                ? igorList
+                : activeRecentTab === "ira"
+                    ? iraList
+                    : allList;
+
+            if (!items.length) {
+                const who = activeRecentTab === "igor"
+                    ? "у Игоря"
+                    : activeRecentTab === "ira"
+                        ? "у Иры"
+                        : "у Игоря и Иры";
+                const hintHtml = recentReadState.fallback
+                    ? `<div class="recent-read-hint">В текущем скрипте таблицы отдаются только последние 50 записей истории — обновите скрипт (type=recentRead), чтобы видеть все 10 книг.</div>`
+                    : "";
+                body.innerHTML = `<div class="recent-read-empty">В истории пока нет прочитанных книг ${who}</div>${hintHtml}`;
+                return;
+            }
+
+            const grid = document.createElement("div");
+            grid.className = "recent-read-grid";
+
+            items.forEach((entry, idx) => {
+                const el = document.createElement(entry.matched ? "button" : "div");
+                if (entry.matched) {
+                    el.type = "button";
+                    el.className = "recent-read-item is-clickable";
+                    el.onclick = () => openBookDetails(entry.matched.id);
+                    el.title = `Открыть карточку: ${entry.book}`;
+                } else {
+                    el.className = "recent-read-item";
+                }
+
+                const coverUrl = entry.matched ? sanitizeCoverUrl(entry.matched.cover) : "";
+                const tone = getCoverToneClass(entry);
+                const monogram = (entry.book || "?").trim().charAt(0).toUpperCase();
+                const { short, full } = formatRecentDate(entry.time);
+                const readerLabel = entry.reader === "igor" ? "Игорь" : "Ира";
+                const readerCls = entry.reader === "igor" ? "is-igor" : "is-ira";
+
+                el.innerHTML = `
+                    <span class="recent-read-rank">${idx + 1}</span>
+                    <div class="recent-mini-cover"></div>
+                    <div class="recent-read-info">
+                        <div class="recent-read-book">${escapeHtml(entry.book)}</div>
+                        <div class="recent-read-author">${escapeHtml(entry.author)}</div>
+                    </div>
+                    <div class="recent-read-meta">
+                        <span class="recent-reader-chip ${readerCls}">${readerLabel}</span>
+                        <span class="recent-read-date" title="${escapeHtml(full)}">${escapeHtml(short)}</span>
+                    </div>
+                `;
+
+                const coverBox = el.querySelector(".recent-mini-cover");
+                const renderMiniFallback = () => {
+                    coverBox.innerHTML = `<div class="recent-mini-spine ${tone}">${escapeHtml(monogram)}</div>`;
+                };
+
+                if (coverUrl) {
+                    const img = document.createElement("img");
+                    img.loading = "lazy";
+                    img.decoding = "async";
+                    img.referrerPolicy = "no-referrer";
+                    img.alt = "";
+                    img.src = coverUrl;
+                    img.onerror = renderMiniFallback;
+                    coverBox.appendChild(img);
+                } else {
+                    renderMiniFallback();
+                }
+
+                grid.appendChild(el);
+            });
+
+            body.replaceChildren(grid);
+
+            if (recentReadState.fallback) {
+                const hint = document.createElement("div");
+                hint.className = "recent-read-hint";
+                hint.textContent = "Показаны книги из последних 50 записей истории. Обновите скрипт таблицы (type=recentRead) для полной выборки по всей истории.";
+                body.appendChild(hint);
+            }
         }
 
         // ===== КНИЖНАЯ КАРТОЧКА, ОБЛОЖКИ И АННОТАЦИИ =====
@@ -3194,7 +3901,9 @@
         }, { passive: true });
 
         // ===== СТАРТ =====
+        initRecentReadCollapse();
         load();
+        loadRecentRead();
     </script>
 </body>
 </html>
